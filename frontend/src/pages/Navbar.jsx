@@ -1,30 +1,33 @@
 import { useState } from "react";
-import "./nav.css";
+import './nav.css';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoIosCloseCircle } from "react-icons/io";
-import { NavLink } from "react-router";
 
-const Navbar = () => {
-    const [openNav, setOpenNav] = useState(false);
+const Navbar = () =>{
+    const [navOpen, setNavOpen] = useState(false);
+
     const links = (
         <>
-            <li><NavLink>Home</NavLink></li>
-            <li><NavLink>About</NavLink></li>
-            <li><NavLink>Services</NavLink></li>
-            <li><NavLink>Projects</NavLink></li>
-            <li><NavLink>Skills</NavLink></li>
-            <li><NavLink>Get In Touch</NavLink></li>
+            <li><Navbar>Home</Navbar></li>
+            <li><Navbar>About</Navbar></li>
+            <li><Navbar>Skills</Navbar></li>
+            <li><Navbar>Projects</Navbar></li>
+            <li><Navbar>Certificatoin</Navbar></li>
+            <li><Navbar>Hire Me</Navbar></li>
         </>
-    )
-    return (
-         <div className="navbar" onClick={() => setOpenNav(!openNav)}>
-            {
-                openNav 
-                ? <IoIosCloseCircle className="menu" />
-                : <GiHamburgerMenu className="menu" />
-            }
-        </div>
     );
+    
+    return (
+        <div className="nav-container">
+            <div className="navbar" onClick={()=> setNavOpen(!navOpen)}>
+                {
+                    navOpen ? <IoIosCloseCircle className="menu"/> : <GiHamburgerMenu className="menu"/>
+                }
+            </div>
+
+            
+        </div>
+    )
 };
 
 export default Navbar;

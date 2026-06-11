@@ -1,26 +1,44 @@
-.navbar{
+.nav-container{
     position: fixed;
     top: 50%;
     left: 2%;
     transform: translateY(-50%);
-    border: 3px solid #00E5A0;
-    border-radius: 50%;
+    z-index: 999;
+}
+
+.navbar{
     width: 70px;
     height: 70px;
-    z-index: 999;
+    border: 3px solid #00E5A0;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    background: #111111;
-    box-shadow: 
+    background: #050505;
+    box-shadow:
         0 0 10px #00E5A0,
         0 0 30px #00E5A0;
-    transition: all 0.4s linear;
-    
+    animation: jumping 1.2s linear infinite;
 }
 
+
 .menu{
-    color: #00E5A0;
     font-size: 30px;
+    color: #00E5A0;
 }
+
+
+@keyframes jumping {
+    0%{
+        transform: translateY(0);
+    }
+    50%{
+        transform: translateY(-7px);
+    }
+    100%{
+        transform: translayeY(0);
+    }
+}
+
+
