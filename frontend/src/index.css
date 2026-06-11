@@ -1,1 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Playwrite+GB+J:ital,wght@0,100..400;1,100..400&family=Sekuya&display=swap');
+
+
 @import "tailwindcss";
+@plugin "daisyui"{
+    themes: light --default, dark --preferdark;
+}
+@plugin "daisyui/theme"{
+    name: "light";
+    default: true;
+    --font-sans: 'Black Ops One', sans-serif;
+    --font-serif: 'Playwrite GB J', serif;
+
+    /* primary (buttons, links, contents) */
+    --color-primary: #00E5A0;
+    --color-primary-content: #001a0f;
+
+    /* base page bg and */
+    --color-base-100: #555555;
+    --color-base-200: #0D0D0D;
+    --color-base-300: #AAAAAA;
+    --color-base-content: #FFFFFF;
+}
