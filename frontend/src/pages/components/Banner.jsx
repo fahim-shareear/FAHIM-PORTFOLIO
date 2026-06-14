@@ -48,14 +48,11 @@ const Banner = () => {
                             with clean code and pixel-perfect UI.
                         </p>
                         <div className="flex gap-3 mt-2">
-                            <button className="px-5 py-2 text-sm border border-gray-500 text-gray-300 rounded hover:border-gray-300 transition">
-                                See My Work
-                            </button>
                             <button
-                                className="px-5 py-2 text-sm rounded transition"
+                                className="px-5 py-2 text-sm rounded transition cursor-pointer"
                                 style={{ border: '1px solid #00e5a0', color: '#00e5a0' }}
                             >
-                                Contact Me →
+                                Resume
                             </button>
                         </div>
                     </div>
