@@ -64,7 +64,7 @@ const Banner = () => {
                     className="absolute bottom-6 left-1/2 -translate-x-1/2 text-xl tracking-widest"
                     style={{ color: '#00e5a0' }}
                 >
-                    ● Fahim Shareear — Full Stack Developer
+                    ● Fahim Shareear — <span className="font-bold">MERN</span> Developer
                 </div>
             </div>
             </div>
