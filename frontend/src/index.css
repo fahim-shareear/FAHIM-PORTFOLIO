@@ -12,8 +12,8 @@
     --font-serif: 'Playwrite GB J', serif;
 
     /* primary (buttons, links, contents) */
-    --color-primary: #00E5A0;
-    --color-primary-content: #001a0f;
+    color-primary: #00E5A0;
+    color-primary-content: #001a0f;
 
     /* base page bg and */
     --color-base-100: #555555;

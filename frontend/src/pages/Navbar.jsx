@@ -5,12 +5,12 @@ import "./nav.css";
 import { NavLink } from "react-router";
 
 const menuItems = [
-    { label: "Home", path: "/" },
-    { label: "About", path: "/about" },
-    { label: "Tech Stack", path: "/tech-stack" },
-    { label: "Projects", path: "/projects" },
-    { label: "Certification", path: "/certification" },
-    { label: "Get In Touch", path: "/contact" },
+    { label: "Home", id: "homw" },
+    { label: "About", id: "about" },
+    { label: "Tech Stack", id: "tech-stack" },
+    { label: "Projects", id: "projects" },
+    { label: "Certification", id: "certification" },
+    { label: "Get In Touch", id: "contact" },
 ];
 
 const Navbar = () => {
@@ -39,7 +39,7 @@ const Navbar = () => {
                                         }}
                                     >
                                         <NavLink
-                                            to={item.path}
+                                            to={item.id}
                                             onClick={() => setIsOpen(false)}
                                         >
                                             {item.label}
