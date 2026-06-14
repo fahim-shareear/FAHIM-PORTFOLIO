@@ -2,15 +2,14 @@ import { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdCloseCircle } from "react-icons/io";
 import "./nav.css";
-import { NavLink } from "react-router";
 
 const menuItems = [
-    { label: "Home", id: "homw" },
-    { label: "About", id: "about" },
-    { label: "Tech Stack", id: "tech-stack" },
-    { label: "Projects", id: "projects" },
-    { label: "Certification", id: "certification" },
-    { label: "Get In Touch", id: "contact" },
+    { label: "Home", to: "#home" },
+    { label: "About", to: "#about" },
+    { label: "Tech Stack", to: "#tech-stack" },
+    { label: "Projects", to: "#projects" },
+    { label: "Certification", to: "#certification" },
+    { label: "Get In Touch", to: "#contact" },
 ];
 
 const Navbar = () => {
@@ -38,12 +37,12 @@ const Navbar = () => {
                                             "--i": i,
                                         }}
                                     >
-                                        <NavLink
-                                            to={item.id}
+                                        <a
+                                            href={item.to}
                                             onClick={() => setIsOpen(false)}
                                         >
                                             {item.label}
-                                        </NavLink>
+                                        </a>
                                     </li>
                                 );
                             })}

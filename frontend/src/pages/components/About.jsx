@@ -4,7 +4,7 @@ import profleImg from "../../assets/Profileimg.jpg";
 
 const About = () => {
     return (
-        <div>
+        <div id="about">
             <div>
                 <div>
                     <img src={profleImg} alt={profleImg} />
