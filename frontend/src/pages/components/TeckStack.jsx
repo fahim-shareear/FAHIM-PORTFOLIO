@@ -30,7 +30,7 @@ const TeckStack = () => {
                 <div className="grid md:grid-cols-6 gap-10 border border-red-500">
                     {
                         frontEnd.map(f => (
-                            <div key={f.id} className="w-30 h-30 rounded-md flex items-center justify-center flex-col bg-[#141010]">
+                            <div key={f.id} className="w-30 h-30 rounded-md flex items-center justify-center flex-col bg-[#141010] border border-[#00E5A0]">
                                 <span className="text-3xl">{f.icon}</span>
                                 <p>{f.name}</p>
                             </div>
@@ -40,7 +40,7 @@ const TeckStack = () => {
                 <div className="grid md:grid-cols-6 gap-10 border border-red-500">
                     {
                         backEnd.map(b => (
-                            <div key={b.id} className="w-30 h-30 rounded-md flex items-center justify-center flex-col bg-[#141010]">
+                            <div key={b.id} className="w-30 h-30 rounded-md flex items-center justify-center flex-col bg-[#141010] border border-[#00E5A0]">
                                 <span className="text-3xl">{b.icon}</span>
                                 <p>{b.name}</p>
                             </div>
@@ -50,7 +50,7 @@ const TeckStack = () => {
                 <div className="grid md:grid-cols-6 gap-10 border border-red-500">
                     {
                         tools.map(t =>(
-                            <div key={t.id} className="w-30 h-30 rounded-md flex items-center justify-center flex-col bg-[#141010]" >
+                            <div key={t.id} className="w-30 h-30 rounded-md flex items-center justify-center flex-col bg-[#141010] border border-[#00E5A0]" >
                                 <span className="text-3xl">{t.icon}</span>
                                 <p>{t.name}</p>
                             </div>
