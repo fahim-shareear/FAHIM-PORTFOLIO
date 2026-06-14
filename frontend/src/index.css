@@ -21,3 +21,8 @@
     --color-base-300: #AAAAAA;
     --color-base-content: #FFFFFF;
 }
+
+
+body{
+    scroll-behavior: smooth;
+}
