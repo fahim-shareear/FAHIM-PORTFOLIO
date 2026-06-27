@@ -13,7 +13,7 @@ const Home = () => {
                 <About></About>
             </section>
 
-            <section id="tech-stack" className="w-full h-150 flex items-center  bg-[#010202] border border-red-500">
+            <section id="tech-stack" className="w-full h-250 flex items-center  bg-[#010202] border border-red-500">
                 <TeckStack></TeckStack>
             </section>
         </main>
