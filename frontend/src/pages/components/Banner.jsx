@@ -1,4 +1,4 @@
-import "./banner.css";
+import "../../all-css/banner.css";
 import profilebg from "../../assets/profilebg.png"
 
 const Banner = () => {
