@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdCloseCircle } from "react-icons/io";
-import "./nav.css";
+import "../all-css/nav.css";
 
 const menuItems = [
     { label: "Home", to: "#home" },
