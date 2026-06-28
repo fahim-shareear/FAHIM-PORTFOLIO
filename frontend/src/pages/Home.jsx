@@ -1,5 +1,6 @@
 import About from "./components/About";
 import Banner from "./components/Banner";
+import Projects from "./components/Projects";
 import TeckStack from "./components/TeckStack";
 
 const Home = () => {
@@ -15,6 +16,10 @@ const Home = () => {
 
             <section id="tech-stack" className="w-full h-150 flex items-center  bg-[#010202]">
                 <TeckStack></TeckStack>
+            </section>
+
+            <section className="w-full h-200 bg-[#010202]" id="projects">
+                <Projects></Projects>
             </section>
         </main>
     );
