@@ -32,7 +32,7 @@ const TeckStack = () => {
         <div className="techstack-section md:max-w-7xl mx-auto">
             <p className="section-label">// skills & tools</p>
 
-            <div className="w-full max-w-5xl mx-auto grid grid-cols-3 items-center gap-8 px-4">
+            <div className="w-full max-w-6xl mx-auto grid grid-cols-3 items-center gap-9 px-4">
 
                 {/* ── Frontend Orbit ── */}
                 <div className="flex flex-col items-center">

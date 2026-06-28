@@ -18,7 +18,7 @@
 }
 
 .section-label {
-    font-size: 0.65rem;
+    font-size: 1.2rem;
     letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--text-muted);
@@ -27,7 +27,7 @@
 }
 
 .section-title {
-    font-size: 0.75rem;
+    font-size: 1rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--cyan);
@@ -109,7 +109,7 @@
 }
 
 .icon-wrap svg {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     width: 1.6rem;
     height: 1.6rem;
 }
