@@ -44,7 +44,7 @@ const Projects = () => {
                                         {
                                             project.teckStack?.map((p, index) =>{
                                                 <li key={index}>
-                                                    {p.teckStack}
+                                                    {p}
                                                 </li>
                                             })
                                         }
