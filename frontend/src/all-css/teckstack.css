@@ -12,7 +12,6 @@
 
 /* ── SECTION WRAPPER ── */
 .techstack-section {
-    background: var(--bg);
     padding: 4rem 1rem;
     font-family: 'Courier New', monospace;
 }
