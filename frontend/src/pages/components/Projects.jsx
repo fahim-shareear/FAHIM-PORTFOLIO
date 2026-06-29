@@ -22,12 +22,11 @@ const Projects = () => {
 
     return (
         <div>
-            <h1>This page is for the project paage: {projects.length}</h1>
             <div className="md:max-w-7xl mx-auto border border-red-500">
                 {
                     projects.length === 0 ? 
-                    <div className="bg-gray-900 text-center w-100 rounded-md h-30 flex items-center justify-center mx-auto">
-                        <h1>No Projects to Show Yet</h1>
+                    <div className="bg-gray-900 text-center w-full rounded-md h-180 flex items-center justify-center mx-auto">
+                        <h1 className="font-bold text-gray-400 opacity-30 text-xl">No Projects to Show Yet</h1>
                     </div> 
                     : 
                     <div className="grid md:grid-cols-4 grid-cols-1 gap-5">
