@@ -2,6 +2,7 @@ import { FaCss, FaHtml5, FaNodeJs, FaReact } from "react-icons/fa6";
 import { IoLogoJavascript } from "react-icons/io5";
 import { RiNextjsLine } from "react-icons/ri";
 import { SiExpress, SiFirebase, SiMongodb, SiPostman, SiVite } from "react-icons/si";
+import { RiTailwindCssFill } from "react-icons/ri";
 import { FaGitAlt, FaFigma } from "react-icons/fa";
 import "../../all-css/teckstack.css";
 
@@ -9,6 +10,7 @@ const TeckStack = () => {
     const frontEnd = [
         { icon: <FaHtml5 />,        label: "html5" },
         { icon: <FaCss />,          label: "css3" },
+        { icon: <RiTailwindCssFill />,          label: "tailwindcss" },
         { icon: <IoLogoJavascript />, label: "js" },
         { icon: <FaReact />,        label: "react" },
         { icon: <RiNextjsLine />,   label: "next" },
