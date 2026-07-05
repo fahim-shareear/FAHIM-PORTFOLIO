@@ -1,0 +1,22 @@
+.b-nav{
+    width: 80px;
+    height: 80px;
+    border: 1px solid #00E5A0;
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00E5A0,
+                0 0 10px #00E5A0;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.b-center span{
+    font-size: 2rem;
+    color: #00E5A0;
+    cursor: pointer;
+}
