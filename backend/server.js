@@ -128,7 +128,7 @@ async function run(){
 
 
         await client.db("admin").command({ping: 1});
-        console.log(`Pinnged the server on port`)
+        console.log(`Pinnged the server on port ${port}`)
     }
     finally{
 
