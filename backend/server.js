@@ -128,7 +128,7 @@ async function run(){
 
 
         await client.db("admin").command({ping: 1});
-        console.log(`Pinnged the server on port ${port}`)
+        // console.log(`Pinnged the server on port ${port}`)
     }
     finally{
 
@@ -140,4 +140,4 @@ run().catch(console.dir);
 
 
 
-app.listen(port, () => console.log(`Server is runnin gon port ${port}`));
+app.listen(port, () => console.log(`Server is running on port ${port}`));
