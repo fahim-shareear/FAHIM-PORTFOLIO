@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import emailjs from '@emailjs/browser';
 import { toast } from "react-toastify";
 
-const PARTICLE_COUNT = 40;
+const PARTICLE_COUNT = 400;
 
 
 const Contact = () => {
