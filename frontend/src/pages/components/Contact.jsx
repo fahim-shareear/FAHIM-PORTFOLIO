@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-
+import emailjs from '@emailjs/browser';
+import { toast } from "react-toastify";
 
 const PARTICLE_COUNT = 40;
 
 
 const Contact = () => {
     const containerRef = useRef(null);
+    const form = useRef();
     const [particles, setParticles] = useState([]);
+    const serviceId = import.meta.env.VITE_SERVICE_ID;
+    const publicKey = import.meta.env.VITE_PUBLIC_KEY;
+    const templateId = import.meta.env.VITE_TEMPLATE_ID
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -19,7 +24,20 @@ const Contact = () => {
                 size: 1 + Math.random() * 2,
             }))
         );
-    }, [])
+    }, []);
+
+    const sendEmail = (e) => {
+        e.preventDefault();
+
+        emailjs.sendForm(serviceId, templateId, form.current, {
+            publicKey
+        }).then(() => {
+            toast.success("Your mail has been sent successfully");
+            form.current.reset();
+        }).catch(() => {
+            toast.error("Some error occured");
+        });
+    };
 
 
     return (
@@ -72,7 +90,10 @@ const Contact = () => {
                 <div className="md:max-w-4xl mx-auto h-full">
                     <h1 className="text-4xl mt-10 ml-10">Get In <span className="uppercase font-bold text-[#00E5A0]">touch:</span></h1>
                     <div className="flex items-center w-200 mx-auto h-170 justify-center mt-5">
-                        <form className="bg-white/3 border border-[#00EA50]/20 rounded-2xl p-10 h-full shadow-[inset_0_0_20px_rgba(0,229,160,0.15)]">
+                        <form className="bg-white/3 border border-[#00EA50]/20 rounded-2xl p-10 h-full shadow-[inset_0_0_20px_rgba(0,229,160,0.15)]"
+                            ref={form}
+                            onSubmit={sendEmail}
+                        >
                             <fieldset className="fieldset gap-5">
                                 <label className="label w-full text-[#00E5A0] text-2xl font-bold">Name</label>
                                 <input type="text" className="input w-120 bg-white/7 border-0! border-b! border-[#00EA50]! text-white focus:outline-none" placeholder="Your Name" name="user_name" />
@@ -81,8 +102,8 @@ const Contact = () => {
                                 <label className="label text-2xl font-bold text-[#00E5A0]">Email</label>
                                 <input type="email" className="input w-120 bg-white/7 border-0! border-b! border-[#00EA50]! text-white focus:outline-none" placeholder="Email" name="user_email" />
                                 <label className="label text-2xl font-bold text-[#00E5A0]">Message</label>
-                                <textarea className="textarea h-24 w-120 bg-white/7 border-0! border-b! border-[#00EA50]! text-white focus:outline-none" placeholder="Your Message"></textarea>
-                                <button className="btn btn-neutral mt-4">Send Mail</button>
+                                <textarea className="textarea h-24 w-120 bg-white/7 border-0! border-b! border-[#00EA50]! text-white focus:outline-none" placeholder="Your Message" name="message"></textarea>
+                                <button className="btn border! border-[#00EA50]! mt-4 shadow-[inset_0_0_20px_rgba(0,229,160,0.15)] text-[#00EA50]">Send Mail</button>
                             </fieldset>
                         </form>
                     </div>
