@@ -6,7 +6,7 @@ import { SiDavinciresolve } from "react-icons/si";
 
 const About = () => {
     return (
-        <div className="bg-[#010202] h-full flex items-center sm:flex-row about">
+        <div className="h-full flex items-center sm:flex-row about">
             <div className="md:max-w-6xl mx-auto flex items-center gap-32">
                 <div className="">
                     <img src={proImg} alt="Profile" className="w-full h-full rounded-xl" />

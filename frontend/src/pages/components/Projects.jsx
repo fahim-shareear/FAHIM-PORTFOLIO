@@ -17,9 +17,6 @@ const Projects = () => {
     });
 
 
-
-
-
     return (
         <div>
             <div className="md:max-w-7xl mx-auto z-10">

@@ -90,11 +90,11 @@ const Home = () => {
 
 
 
-                <section id="about" className="w-full h-200 bg-[#010202]">
+                <section id="about" className="w-full h-200 bg-[#000000]">
                     <About></About>
                 </section>
 
-                <section id="tech-stack" className="w-full h-150 flex items-center  bg-[#010202]">
+                <section id="tech-stack" className="w-full h-150 flex items-center  bg-[#000000]">
                     <TeckStack></TeckStack>
                 </section>
 
