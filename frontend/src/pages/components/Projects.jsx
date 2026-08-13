@@ -22,7 +22,7 @@ const Projects = () => {
 
     return (
         <div>
-            <div className="md:max-w-7xl mx-auto">
+            <div className="md:max-w-7xl mx-auto z-10">
                 {
                     projects.length === 0 ? 
                     <div className="bg-gray-900 text-center w-full rounded-md h-180 flex items-center justify-center mx-auto">

@@ -31,7 +31,7 @@ const TeckStack = () => {
     ];
 
     return (
-        <div className="techstack-section md:max-w-7xl mx-auto">
+        <div className="techstack-section md:max-w-7xl mx-auto z-10">
             <p className="section-label">// skills & tools</p>
 
             <div className="w-full max-w-6xl mx-auto grid grid-cols-3 items-center gap-9 px-4">
