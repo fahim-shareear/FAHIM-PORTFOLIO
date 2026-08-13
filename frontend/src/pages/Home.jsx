@@ -98,7 +98,7 @@ const Home = () => {
                     <TeckStack></TeckStack>
                 </section>
 
-                <section className="w-full h-200 bg-[#010202]" id="projects">
+                <section className="w-full h-200 bg-[#000000]" id="projects">
                     <Projects></Projects>
                 </section>
 
