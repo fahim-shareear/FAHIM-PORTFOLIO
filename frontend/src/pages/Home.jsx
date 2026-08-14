@@ -4,6 +4,7 @@ import Banner from "./components/Banner";
 import Contact from "./components/Contact";
 import Projects from "./components/Projects";
 import TeckStack from "./components/TeckStack";
+import Feedback from "./components/Feedback";
 
 const PARTICLE_COUNT = 400;
 
@@ -87,9 +88,6 @@ const Home = () => {
 
 
 
-
-
-
                 <section id="about" className="w-full h-200 bg-[#000000]">
                     <About></About>
                 </section>
@@ -100,6 +98,10 @@ const Home = () => {
 
                 <section className="w-full h-200 bg-[#000000]" id="projects">
                     <Projects></Projects>
+                </section>
+
+                <section className="w-full h-170 bg-[#000000] border border-red-500">
+                    <Feedback></Feedback>
                 </section>
 
                 <section id="contact" className="w-full h-200 bg-[#010202]">
