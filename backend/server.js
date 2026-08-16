@@ -107,25 +107,6 @@ async function run(){
             };
         });
 
-        //feedback updating api:
-        app.patch("/feedback/:id", async(req, res)=>{
-            const id = req.params.id;
-            const updatedData = req.body;
-            const query = {_id: new ObjectId(id)};
-            const updatedDoc = {
-                $set: updatedData
-            };
-            try{
-                const result = await feedbackCollection.updateOne(query, updatedDoc);
-                if(result.matchedCount === 0){
-                    return res.status(400).send({message: "no previous feedback found"});
-                }
-                res.status(200).send(result);
-            }catch(error){
-                res.status(500).send({message: "unable to update the feedback right now!"})
-            }
-        });
-
 
         await client.db("admin").command({ping: 1});
         // console.log(`Pinnged the server on port ${port}`)
