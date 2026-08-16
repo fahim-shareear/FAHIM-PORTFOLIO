@@ -100,7 +100,7 @@ const Home = () => {
                     <Projects></Projects>
                 </section>
 
-                <section className="w-full h-170 bg-[#000000] border border-red-500">
+                <section className="w-full h-170 bg-[#000000] flex items-center justify-center">
                     <Feedback></Feedback>
                 </section>
 
