@@ -70,7 +70,21 @@ const Feedback = () => {
                     }
                 </Swiper>
 
-                <button className='font-bold text-[#00E5A0] p-4 rounded-3xl shadow-[inset_0_0_40px_rgba(0,229,160,0.15)] cursor-pointer bg-white/5 uppercase border border-[#00EA50]'>Provide Feedback</button>
+                <button className='font-bold 
+                                text-[#00E5A0] 
+                                p-4 
+                                rounded-3xl 
+                                shadow-[inset_0_0_40px_rgba(0,229,160,0.15)] 
+                                cursor-pointer 
+                                bg-white/5 
+                                uppercase 
+                                border 
+                                border-[#00EA50]
+                                hover:bg-[#00ea5276]
+                                hover:text-white
+                                transition-all
+                                duration-400
+                                linear'>Provide Feedback</button>
             </div>
             <div className='border border-red-500 absolute right-0 top-0 p-13 md:max-w-150 z-100'>
                 <form className='w-full'>
