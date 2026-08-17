@@ -8,6 +8,7 @@ import { Autoplay, EffectCoverflow, Pagination } from 'swiper/modules';
 import { useEffect, useState } from 'react';
 import useAxios from '../../axios/useAxios';
 import { toast } from 'react-toastify';
+import { useForm } from "react-hook-form"
 
 
 
@@ -16,6 +17,7 @@ const Feedback = () => {
     const [feedback, setFeedback] = useState([]);
     const [loading, setLoading] = useState(true);
     const [feedForm, setFeedForm] = useState(false);
+    const {register, handleSubmit,formState: {errors}} = useForm();
 
     useEffect(() => {
         axiosinstance.get('/feedback').then(res => {
@@ -32,6 +34,11 @@ const Feedback = () => {
     const toggleFeedForm = () => {
         setFeedForm(prev => !prev);
     };
+
+    //handle form submission:
+    const handleFormSubmit = (data) =>{
+        const profileImg = data.image[0];
+    }
 
     if (loading) return <p className='text-center italic text-[#005A00] font-bold'>Loading.....</p>
 
@@ -103,21 +110,29 @@ const Feedback = () => {
 
             {/* sliding panel - always mounted, transform-driven */}
             <div
-                className={`border-0 border-l border-[#00EA50] rounded-2xl fixed right-0 top-0 h-full w-130! z-100
+                className={`border-0 border-l border-[#00EA50] rounded-2xl fixed right-0 top-50 w-130! z-100
                     bg-black shadow-[0_0_40px_rgba(0,229,160,0.18)]
                     transition-transform duration-500 ease-linear
                     ${feedForm ? 'translate-x-0' : 'translate-x-full'}`}
             >
-                <form className='w-full'>
+                <form className='w-full' onSubmit={handleSubmit(handleFormSubmit)}>
                     <fieldset className="fieldset gap-3 p-5">
                         <label className="label md:text-xl text-[#00EA50]">Name</label>
-                        <input type="text" className="input bg-white/4 border-0 border-b-2 border-[#00EA50] w-full" placeholder="Your Name" />
-                        <input type="file" className="file-input w-full border-0 border-b border-[#00EA50] mt-2" />
+                        <input type="text" className="input bg-white/4 border-0 border-b-2 border-[#00EA50] w-full" placeholder="Your Name" {...register("name", {required: true})} />
+                        {errors.name?.type === "required" && <p className='text-red-500 p-2 '>Name field is required.</p>}
+
+                        <input type="file" className="file-input w-full border-0 border-b border-[#00EA50] mt-2" {...register("image", {required: true})}/>
                         <label className="label">Max size 2MB</label>
+                        {errors.image?.type === "required" && <p className='text-red-500 p-2'>You must provide an image</p>}
+
                         <label className="label md:text-xl text-[#00EA50]">Email</label>
-                        <input type="email" className="input bg-white/4 border-0 border-b-2 border-[#00EA50] w-full" placeholder="Email" />
+                        <input type="email" className="input bg-white/4 border-0 border-b-2 border-[#00EA50] w-full" placeholder="Email" {...register("email", {required: true})} />
+                        {errors.email?.type === "required" && <p className='text-red-500 p-2'>Please provide your email.</p>}
+
                         <label className='label md:text-xl text-[#00EA50]'>Feedback</label>
-                        <textarea placeholder="Your feedback" className="textarea textarea-accent bg-white/4 border-0 border-b-2 border-[#00EA50] w-full"></textarea>
+                        <textarea placeholder="Your feedback" className="textarea textarea-accent bg-white/4 border-0 border-b-2 border-[#00EA50] w-full" {...register("feedback", {required: true, maxLength: 130})}></textarea>
+                        {errors.feedback?.type === "required" && <p className='font-bold text-red-500 uppercase'>You forgot the most important thing...!!</p>}
+
                         <button className="btn btn-neutral mt-4 shadow-[inset_0_0_40px_rgba(0,229,160,0.15)] 
                                 cursor-pointer 
                                 bg-white/5 
