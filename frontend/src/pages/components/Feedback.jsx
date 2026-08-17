@@ -15,6 +15,7 @@ const Feedback = () => {
     const axiosinstance = useAxios();
     const [feedback, setFeedback] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [feedForm, setFeedForm] = useState(false);
 
     useEffect(() => {
         axiosinstance.get('/feedback').then(res => {
@@ -27,11 +28,16 @@ const Feedback = () => {
         })
     }, [axiosinstance]);
 
+    // single toggler for both open + close
+    const toggleFeedForm = () => {
+        setFeedForm(prev => !prev);
+    };
+
     if (loading) return <p className='text-center italic text-[#005A00] font-bold'>Loading.....</p>
 
 
     return (
-        <div className='relative w-full'>
+        <div className='relative w-full overflow-hidden'>
             <div className='flex items-center justify-center flex-col gap-10'>
                 <Swiper
                     effect={'coverflow'}
@@ -84,20 +90,51 @@ const Feedback = () => {
                                 hover:text-white
                                 transition-all
                                 duration-400
-                                linear'>Provide Feedback</button>
+                                linear'
+                                onClick={toggleFeedForm}>Provide Feedback</button>
             </div>
-            <div className='border border-red-500 absolute right-0 top-0 p-13 md:max-w-150 z-100'>
+
+            {/* backdrop - click outside to close */}
+            <div
+                onClick={toggleFeedForm}
+                className={`fixed inset-0 bg-black/50 z-90 transition-opacity duration-500 ease-linear
+                    ${feedForm ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+            />
+
+            {/* sliding panel - always mounted, transform-driven */}
+            <div
+                className={`border-0 border-l border-[#00EA50] rounded-2xl fixed right-0 top-0 h-full w-130! z-100
+                    bg-black shadow-[0_0_40px_rgba(0,229,160,0.18)]
+                    transition-transform duration-500 ease-linear
+                    ${feedForm ? 'translate-x-0' : 'translate-x-full'}`}
+            >
                 <form className='w-full'>
-                    <fieldset className="fieldset gap-3">
-                        <label className="label md:text-xl">Name</label>
-                        <input type="text" className="input" placeholder="Your Name" />
-                        <label className="label md:text-xl">Email</label>
-                        <input type="email" className="input" placeholder="email" />
-                        <label className='label md:text-xl'>Feedback</label>
-                        <textarea placeholder="Accent" className="textarea textarea-accent"></textarea>
-                        <button className="btn btn-neutral mt-4">Submit</button>
+                    <fieldset className="fieldset gap-3 p-5">
+                        <label className="label md:text-xl text-[#00EA50]">Name</label>
+                        <input type="text" className="input bg-white/4 border-0 border-b-2 border-[#00EA50] w-full" placeholder="Your Name" />
+                        <input type="file" className="file-input w-full border-0 border-b border-[#00EA50] mt-2" />
+                        <label className="label">Max size 2MB</label>
+                        <label className="label md:text-xl text-[#00EA50]">Email</label>
+                        <input type="email" className="input bg-white/4 border-0 border-b-2 border-[#00EA50] w-full" placeholder="Email" />
+                        <label className='label md:text-xl text-[#00EA50]'>Feedback</label>
+                        <textarea placeholder="Your feedback" className="textarea textarea-accent bg-white/4 border-0 border-b-2 border-[#00EA50] w-full"></textarea>
+                        <button className="btn btn-neutral mt-4 shadow-[inset_0_0_40px_rgba(0,229,160,0.15)] 
+                                cursor-pointer 
+                                bg-white/5 
+                                uppercase 
+                                border 
+                                border-[#00EA50]
+                                hover:bg-[#00ea5276]
+                                hover:text-white
+                                transition-all
+                                duration-400
+                                linear">Submit</button>
                     </fieldset>
                 </form>
+                <button
+                    type="button"
+                    onClick={toggleFeedForm}
+                    className='font-bold text-[#00EA50] top-3 right-5 cursor-pointer absolute'>X</button>
             </div>
         </div>
     );
