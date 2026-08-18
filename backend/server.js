@@ -101,7 +101,7 @@ async function run(){
             const feedBack = req.body;
             try{
                 const result = await feedbackCollection.insertOne(feedBack);
-                res.status(201).send({message: "your feedback is appreciated."})
+                res.status(201).send({message: "Your feedback is appreciated."})
             }catch(error){
                 return res.status(500).send({message: "unable to post feedback right now."});
             };

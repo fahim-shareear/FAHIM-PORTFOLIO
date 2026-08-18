@@ -39,15 +39,15 @@ const Feedback = () => {
 
     //handle form submission:
     const handleFormSubmit = (data) =>{
+        console.log(data);
         const profileImg = data.image[0];
         setSubmitting(true);
 
-
-        //uploading image to imgbbfirst:
+        //uploading image to imgbb:
         const formData = new FormData();
         formData.append('image', profileImg);
 
-        const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host}`;
+        const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host}`
         axios.post(image_API_URL, formData).then(res =>{
             const photoURL = res.data.data.url;
 
@@ -56,26 +56,22 @@ const Feedback = () => {
                 name: data.name,
                 email: data.email,
                 feedback: data.feedback,
-                photoURL: photoURL
+                photoURL: photoURL,
             };
 
             axiosinstance.post('/feedback', feedbackInfo).then(res =>{
-                if(res.data.insertedId){
-                    toast.success("Thank you for your kind feedback!");
-                    setFeedback(prev => [...prev, {...feedbackInfo, _id: res.data.insertedId}]);
-                    reset();
-                    setFeedForm(false);
-                }
-            }).catch(() =>{
-                toast.error("Couldn't submit your feedback!")
-            }).finally(()=>{
+                console.log(res);
+                toast.success(res.data.message);
+                reset();
+                setFeedForm(false);
                 setSubmitting(false);
-            })
+            }).catch((err)=>{
+                toast.error(err.data.message);
+            });
         }).catch(()=>{
-            toast.error("Image upload failed! Please try again.");
-            setSubmitting(false);
+            toast.error("Unable to upload your photo.");
         })
-    };
+    }
 
     if (loading) return <p className='text-center italic text-[#005A00] font-bold'>Loading.....</p>
 
