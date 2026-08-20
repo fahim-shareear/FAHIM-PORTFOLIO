@@ -14,19 +14,19 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGO_PASSWORD}@learning-server.eft4uy8.mongodb.net/?appName=learning-server`;
 
 const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
 });
 
-app.get("/", (req, res) =>{
+app.get("/", (req, res) => {
     res.send("Server is up and running");
 });
 
-async function run(){
-    try{
+async function run() {
+    try {
         await client.connect();
         const portfolio = client.db("portfolio");
         const feedbackCollection = portfolio.collection("feedback");
@@ -36,82 +36,82 @@ async function run(){
 
 
         //projects related apis:
-        app.get("/projects", async(req, res)=>{
+        app.get("/projects", async (req, res) => {
             const projects = await projectCollection.find().toArray();
-            if(projects.length === 0){
-                return res.status(404).send({message: "No Projects to Show"})
+            if (projects.length === 0) {
+                return res.status(404).send({ message: "No Projects to Show" })
             };
             res.send(projects);
         });
 
         //project posting api:
-        app.post("/projects", async(req, res)=>{
+        app.post("/projects", async (req, res) => {
             const projects = req.body;
-            try{
+            try {
                 const result = await projectCollection.insertOne(projects);
-                res.status(201).send({message: "project added", id: result.insertedId})
-            }catch(error){
-                return res.status(500).send({message: "unable to post!!"})
+                res.status(201).send({ message: "project added", id: result.insertedId })
+            } catch (error) {
+                return res.status(500).send({ message: "unable to post!!" })
             }
         });
 
         //project updating api:
-        app.patch("/projects/:id", async(req, res)=>{
+        app.patch("/projects/:id", async (req, res) => {
             const id = req.params.id;
             const updatedData = req.body;
-            const query = {_id: new ObjectId(id)};
+            const query = { _id: new ObjectId(id) };
             const updatedDoc = {
                 $set: updatedData
             };
 
-            try{
+            try {
                 const result = await projectCollection.updateOne(query, updatedDoc);
-                if(result.matchedCount === 0){
-                    return res.status(404).send({message: "project not found"});
+                if (result.matchedCount === 0) {
+                    return res.status(404).send({ message: "project not found" });
                 };
                 res.status(200).send(result);
-            }catch(error){
-                res.status(500).send({message: "unable to update project."})
+            } catch (error) {
+                res.status(500).send({ message: "unable to update project." })
             }
         });
 
         //project info deleting api:
-        app.delete("/projects/:id", async(req, res)=>{
+        app.delete("/projects/:id", async (req, res) => {
             const id = req.params.id;
-            const query = {_id: new ObjectId(id)};
-            try{
+            const query = { _id: new ObjectId(id) };
+            try {
                 const result = await projectCollection.deleteOne(query);
-                if(result.deletedCount === 0){
-                    return res.status(404).send({message: "project not found"});
+                if (result.deletedCount === 0) {
+                    return res.status(404).send({ message: "project not found" });
                 }
-                res.status(200).send({message: "project has been deleted."})
-            }catch(error){
-                res.status(500).send({message: "unable to delete project."})
+                res.status(200).send({ message: "project has been deleted." })
+            } catch (error) {
+                res.status(500).send({ message: "unable to delete project." })
             }
         });
 
         //feedback related api's:
-        app.get("/feedback", async (req, res)=>{
+        app.get("/feedback", async (req, res) => {
             const feedBack = await feedbackCollection.find().toArray();
             res.send(feedBack);
         });
 
         //feedback posting api:
-        app.post("/feedback", async(req, res)=>{
+        app.post("/feedback", async (req, res) => {
             const feedBack = req.body;
-            try{
+            try {
                 const result = await feedbackCollection.insertOne(feedBack);
-                res.status(201).send({message: "Your feedback is appreciated."})
-            }catch(error){
-                return res.status(500).send({message: "unable to post feedback right now."});
+                res.status(201).send({ message: "Your feedback is appreciated." })
+            } catch (error) {
+                return res.status(500).send({ message: "unable to post feedback right now." });
             };
         });
 
 
-        await client.db("admin").command({ping: 1});
+        await client.db("admin").command({ ping: 1 });
         // console.log(`Pinnged the server on port ${port}`)
     }
-    finally{
+    finally {
 
     };
 };
