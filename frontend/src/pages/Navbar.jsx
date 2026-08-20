@@ -2,6 +2,7 @@ import { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdCloseCircle } from "react-icons/io";
 import "../all-css/nav.css";
+import useCertification from "../authcontext/hooks/useCertification";
 
 const menuItems = [
     { label: "Home", to: "#home" },
@@ -14,9 +15,18 @@ const menuItems = [
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const {openCertificationDrawer} = useCertification();
 
     const handleOpen = () => setIsOpen(!isOpen);
     const total = menuItems.length;
+
+    const handleItem = (e, item) =>{
+        setIsOpen(false);
+        if(item.label === "Certification"){
+            e.preventDefault();
+            openCertificationDrawer();
+        };
+    };
 
 
     return (
@@ -40,6 +50,7 @@ const Navbar = () => {
                                     >
                                         <a
                                             href={item.to}
+                                            onClick={(e) => handleItem(e, item)}
                                         >
                                             {item.label}
                                         </a>
