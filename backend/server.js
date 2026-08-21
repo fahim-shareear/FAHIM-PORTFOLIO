@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
 const port = process.env.PORT || 3000;
 
 
@@ -21,6 +23,30 @@ const client = new MongoClient(uri, {
     }
 });
 
+//cloudinary config:
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+//taking in the middle in-memory buffer and streaming it to the cloudinary:
+const uploadTocloudinary = (fileBuffer) =>{
+    return new Promise((resolve, reject) =>{
+        const stream = cloudinary.uploader.upload_stream(
+            {folder: "portfolio-images"},
+            (error, result) =>{
+                if(error) return reject(error);
+                resolve(result);
+            }
+        );
+        stream.end(fileBuffer);
+    });
+};
+
 app.get("/", (req, res) => {
     res.send("Server is up and running");
 });
@@ -32,6 +58,7 @@ async function run() {
         const feedbackCollection = portfolio.collection("feedback");
         const clientCollection = portfolio.collection("clients");
         const projectCollection = portfolio.collection("projects");
+        const pictureCollection = portfolio.collection("pictures");
 
 
 
@@ -106,6 +133,34 @@ async function run() {
                 return res.status(500).send({ message: "unable to post feedback right now." });
             };
         });
+
+
+        //picture related api start here:
+        app.post("/pictures", upload.single("image"), async (req, res)=>{
+            if(!req.file){
+                return res.status(400).send({message: "no image received."});
+            };
+
+            try{
+                const cloudinaryResult = await uploadTocloudinary(req.file.buffer);
+                const pictureDoc = {
+                    url: cloudinaryResult.secure.url,
+                    publicId: cloudinaryResult.publid_id,
+                    uploadedAt: new Date(),
+                };
+
+                const result = await pictureCollection.insertOne(pictureDoc);
+                res.status(201).send({message: "image has been uploaded"});
+            }catch{
+                res.status(500).send({message: "unable to upload image"});
+            }
+        });
+
+        //picture getting api:
+        app.get("/pictures", async(req, res)=>{
+            const pictures = await picturesCollection.find().toArray();
+            res.send(pictures);
+        })
 
 
         await client.db("admin").command({ ping: 1 });
