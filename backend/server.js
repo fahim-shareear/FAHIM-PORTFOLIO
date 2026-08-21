@@ -58,7 +58,7 @@ async function run() {
         const feedbackCollection = portfolio.collection("feedback");
         const clientCollection = portfolio.collection("clients");
         const projectCollection = portfolio.collection("projects");
-        const pictureCollection = portfolio.collection("pictures");
+        const picturesCollection = portfolio.collection("pictures");
 
 
 
