@@ -149,7 +149,7 @@ async function run() {
                     uploadedAt: new Date(),
                 };
 
-                const result = await pictureCollection.insertOne(pictureDoc);
+                const result = await picturesCollection.insertOne(pictureDoc);
                 res.status(201).send({message: "image has been uploaded"});
             }catch{
                 res.status(500).send({message: "unable to upload image"});
