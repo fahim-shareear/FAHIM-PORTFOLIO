@@ -144,8 +144,8 @@ async function run() {
             try{
                 const cloudinaryResult = await uploadTocloudinary(req.file.buffer);
                 const pictureDoc = {
-                    url: cloudinaryResult.secure.url,
-                    publicId: cloudinaryResult.publid_id,
+                    url: cloudinaryResult.secure_url,
+                    publicId: cloudinaryResult.public_id,
                     uploadedAt: new Date(),
                 };
 
@@ -153,6 +153,46 @@ async function run() {
                 res.status(201).send({message: "image has been uploaded"});
             }catch{
                 res.status(500).send({message: "unable to upload image"});
+            }
+        });
+
+        app.post("/pictures/certification", upload.single("image"), async (req, res)=>{
+            if(!req.file){
+                return res.status(400).send({message: "no image received."});
+            };
+
+            try{
+                const cloudinaryResult = await uploadTocloudinary(req.file.buffer);
+                const pictureDoc = {
+                    url: cloudinaryResult.secure_url,
+                    publicId: cloudinaryResult.public_id,
+                    uploadedAt: new Date(),
+                };
+
+                const result = await picturesCollection.insertOne(pictureDoc);
+                res.status(201).send({message: "image has been uploaded"});
+            }catch{
+                res.status(500).send({message: "unable to upload image!"});
+            };
+        });
+
+        app.post("/pictures/projects", upload.single("image"), async(req, res)=>{
+            if(!req.file){
+                return res.status(400).send({message: "no images received."});
+            };
+
+            try{
+                const cloudinaryResult = await uploadTocloudinary(req.file.buffer);
+                const pictureDoc = {
+                    url: cloudinaryResult.secure_url,
+                    publicId: cloudinaryResult.public_id,
+                    uploadedAt: new Date(),
+                };
+
+                const result = await picturesCollection.insertOne(pictureDoc);
+                res.status(201).send({message: "image has been uploaded"});
+            }catch{
+                res.status(500).send({message: "unable to upload image."});
             }
         });
 

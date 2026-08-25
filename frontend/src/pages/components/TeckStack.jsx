@@ -50,7 +50,7 @@ const TeckStack = () => {
                                     style={{ "--i": i, "--total": frontEnd.length }}
                                 >
                                     {item.icon}
-                                    <span>{item.label}</span>
+                                    <span className="text-[#00EA50] font-bold text-[18px]">{item.label}</span>
                                 </div>
                             </li>
                         ))}
@@ -91,7 +91,7 @@ const TeckStack = () => {
                                     style={{ "--i": i, "--total": backEnd.length }}
                                 >
                                     {item.icon}
-                                    <span>{item.label}</span>
+                                    <span className="text-[#00EA50] text-[18px] font-bold">{item.label}</span>
                                 </div>
                             </li>
                         ))}
