@@ -5,6 +5,7 @@ import Contact from "./components/Contact";
 import Projects from "./components/Projects";
 import TeckStack from "./components/TeckStack";
 import Feedback from "./components/Feedback";
+import useScrollHash from "../authcontext/hooks/useScrollHash";
 
 const PARTICLE_COUNT = 400;
 
@@ -12,6 +13,7 @@ const Home = () => {
     const containerRef = useRef(null);
     const [particles, setParticles] = useState([]);
     const [riseDistance, setRiseDistance] =useState(2000);
+    useScrollHash();
 
 
     useEffect(() => {

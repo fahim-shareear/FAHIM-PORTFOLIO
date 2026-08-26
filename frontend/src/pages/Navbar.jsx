@@ -3,6 +3,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdCloseCircle } from "react-icons/io";
 import "../all-css/nav.css";
 import useCertification from "../authcontext/hooks/useCertification";
+import { useLocation, useNavigate } from "react-router";
 
 const menuItems = [
     { label: "Home", to: "#home" },
@@ -16,6 +17,8 @@ const menuItems = [
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const {openCertificationDrawer} = useCertification();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const handleOpen = () => setIsOpen(!isOpen);
     const total = menuItems.length;
@@ -26,6 +29,14 @@ const Navbar = () => {
             e.preventDefault();
             openCertificationDrawer();
         };
+
+        const id = item.to.replace("#", "");
+
+        if(location.pathname !== "/"){
+            navigate(`/${item.to}`)
+        }else{
+            document.getElementById(id)?.scrollIntoView({bahaviour: "smooth"});
+        }
     };
 
 
