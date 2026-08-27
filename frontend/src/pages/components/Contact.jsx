@@ -96,13 +96,13 @@ const Contact = () => {
                         >
                             <fieldset className="fieldset gap-5">
                                 <label className="label w-full text-[#00E5A0] text-2xl font-bold">Name</label>
-                                <input type="text" className="input w-120 bg-white/7 border-0! border-b! border-[#00EA50]! text-white focus:outline-none" placeholder="Your Name" name="user_name" />
+                                <input type="text" required className="input w-120 bg-white/7 border-0! border-b! border-[#00EA50]! text-white focus:outline-none" placeholder="Your Name" name="user_name" />
                                 <label className="label text-2xl font-bold text-[#00E5A0]">Subject</label>
-                                <input type="text" className="input w-120 bg-white/7 border-0! border-b! border-[#00EA50]! text-white focus:outline-none" placeholder="Subject" name="subject" />
+                                <input type="text" required className="input w-120 bg-white/7 border-0! border-b! border-[#00EA50]! text-white focus:outline-none" placeholder="Subject" name="subject" />
                                 <label className="label text-2xl font-bold text-[#00E5A0]">Email</label>
-                                <input type="email" className="input w-120 bg-white/7 border-0! border-b! border-[#00EA50]! text-white focus:outline-none" placeholder="Email" name="user_email" />
+                                <input type="email" required className="input w-120 bg-white/7 border-0! border-b! border-[#00EA50]! text-white focus:outline-none" placeholder="Email" name="user_email" />
                                 <label className="label text-2xl font-bold text-[#00E5A0]">Message</label>
-                                <textarea className="textarea h-24 w-120 bg-white/7 border-0! border-b! border-[#00EA50]! text-white focus:outline-none" placeholder="Your Message" name="message"></textarea>
+                                <textarea required className="textarea h-24 w-120 bg-white/7 border-0! border-b! border-[#00EA50]! text-white focus:outline-none" placeholder="Your Message" name="message"></textarea>
                                 <button className="btn border! border-[#00EA50]! mt-4 shadow-[inset_0_0_20px_rgba(0,229,160,0.15)] text-[#00EA50]">Send Mail</button>
                             </fieldset>
                         </form>
