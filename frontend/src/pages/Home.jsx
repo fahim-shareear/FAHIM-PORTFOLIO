@@ -6,6 +6,7 @@ import Projects from "./components/Projects";
 import TeckStack from "./components/TeckStack";
 import Feedback from "./components/Feedback";
 import useScrollHash from "../authcontext/hooks/useScrollHash";
+import SideSocial from "./components/sidebar/SideSocial";
 
 const PARTICLE_COUNT = 400;
 
@@ -108,6 +109,9 @@ const Home = () => {
 
                 <section id="contact" className="w-full h-200 bg-[#010202]">
                     <Contact></Contact>
+                </section>
+                <section>
+                    <SideSocial></SideSocial>
                 </section>
             </section>
         </main>
