@@ -7,6 +7,7 @@ import TeckStack from "./components/TeckStack";
 import Feedback from "./components/Feedback";
 import useScrollHash from "../authcontext/hooks/useScrollHash";
 import SideSocial from "./components/sidebar/SideSocial";
+import CertificationDrawer from "./components/CertificationDrawer";
 
 const PARTICLE_COUNT = 400;
 
@@ -112,6 +113,9 @@ const Home = () => {
                 </section>
                 <section>
                     <SideSocial></SideSocial>
+                </section>
+                <section>
+                    <CertificationDrawer></CertificationDrawer>
                 </section>
             </section>
         </main>

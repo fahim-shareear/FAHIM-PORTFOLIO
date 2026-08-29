@@ -2,7 +2,23 @@
 const Login = () => {
     return (
         <div>
-            <h1>This is the login page</h1>
+            <div>
+                <div>
+                    <h2>log in now</h2>
+                </div>
+                <div>
+                    <form>
+                        <fieldset className="fieldset">
+                            <label className="label">Email</label>
+                            <input type="email" className="input" placeholder="Email" />
+                            <label className="label">Password</label>
+                            <input type="password" className="input" placeholder="Password" />
+                            <div><a className="link link-hover">Forgot password?</a></div>
+                            <button className="btn btn-neutral mt-4">Login</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
         </div>
     );
 };
