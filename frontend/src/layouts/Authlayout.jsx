@@ -28,7 +28,7 @@ const Authlayout = () => {
 
 
     return (
-        <div ref={containerRef} className="w-full h-full flex items-center justify-center bg-black overflow-hidden relative">
+        <div ref={containerRef} className="w-full h-screen flex items-center justify-center bg-black overflow-hidden relative">
             <style>
                 {`
                     @keyframes rise{
@@ -43,7 +43,7 @@ const Authlayout = () => {
                         bottom: 0;
                         border-radius: 50%;
                         background: #00EA50;
-                        box-shadow: 0 0 6px 1px rgba(0 229, 160, 0.6);
+                        box-shadow: 0 0 6px 1px rgba(0, 229, 160, 0.6);
                         animation-name: rise;
                         animation-timing-function: linear;
                         animation-ititration-count: infinite;
