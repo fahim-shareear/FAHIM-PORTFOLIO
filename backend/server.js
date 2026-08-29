@@ -3,6 +3,10 @@ const express = require('express');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 const multer = require('multer');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+const verifyToken = require('./components/authmiddleware/verifyToken');
 const cloudinary = require('cloudinary').v2;
 const port = process.env.PORT || 3000;
 
@@ -11,8 +15,12 @@ const port = process.env.PORT || 3000;
 
 //middlewares:
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+}));
 app.use(express.json());
+app.use(cookieParser());
 const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGO_PASSWORD}@learning-server.eft4uy8.mongodb.net/?appName=learning-server`;
 
 const client = new MongoClient(uri, {
@@ -34,12 +42,12 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 //taking in the middle in-memory buffer and streaming it to the cloudinary:
-const uploadTocloudinary = (fileBuffer) =>{
-    return new Promise((resolve, reject) =>{
+const uploadTocloudinary = (fileBuffer) => {
+    return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
-            {folder: "portfolio-images"},
-            (error, result) =>{
-                if(error) return reject(error);
+            { folder: "portfolio-images" },
+            (error, result) => {
+                if (error) return reject(error);
                 resolve(result);
             }
         );
@@ -59,7 +67,58 @@ async function run() {
         const clientCollection = portfolio.collection("clients");
         const projectCollection = portfolio.collection("projects");
         const picturesCollection = portfolio.collection("pictures");
+        const userCollection = portfolio.collection("users");
 
+
+        //auth related api's:
+        app.post("/login", async (req, res) => {
+            const { email, password } = req.body;
+
+            if(!email || !password){
+                return res.status.send({message: "email and password are required"});
+            };
+
+            try{
+                const user = await userCollection.findOne({email});
+                if(!user){
+                    return res.status(401).send({message: "invalid email or password"});
+                };
+
+                const passwordMatches = await bcrypt.compare(password, user.passwordHash);
+                if(!passwordMatches){
+                    return res.status(401).send({message: "invalid email or password"});
+                }
+
+
+                const token = jwt.sign(
+                    {email: user.email, id: user._id},
+                    process.env.JWT_SECRET,
+                    {expiresIn: "22d"}
+                );
+
+                res.cookie("token", token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+                    maxAge: 22 * 24 * 60 * 60 * 1000,
+                }).send({message: "logged in"});
+            }catch (error){
+                res.status(500).send({message: "log in failed"});
+            };
+        });
+
+
+        app.post("/logout", (req, res)=>{
+            res.clearCookie("token", {
+                httpOnly: true,
+                secure: process.env.NOVE_ENV === "production",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            }).send({message: "logged out"});
+        });
+
+        app.get("/me", verifyToken, (req, res)=>{
+            res.send({email: req.decodedUser.email});
+        });
 
 
         //projects related apis:
@@ -72,7 +131,7 @@ async function run() {
         });
 
         //project posting api:
-        app.post("/projects", async (req, res) => {
+        app.post("/projects", verifyToken, async (req, res) => {
             const projects = req.body;
             try {
                 const result = await projectCollection.insertOne(projects);
@@ -83,7 +142,7 @@ async function run() {
         });
 
         //project updating api:
-        app.patch("/projects/:id", async (req, res) => {
+        app.patch("/projects/:id", verifyToken, async (req, res) => {
             const id = req.params.id;
             const updatedData = req.body;
             const query = { _id: new ObjectId(id) };
@@ -103,7 +162,7 @@ async function run() {
         });
 
         //project info deleting api:
-        app.delete("/projects/:id", async (req, res) => {
+        app.delete("/projects/:id", verifyToken, async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             try {
@@ -136,12 +195,12 @@ async function run() {
 
 
         //picture related api start here:
-        app.post("/pictures", upload.single("image"), async (req, res)=>{
-            if(!req.file){
-                return res.status(400).send({message: "no image received."});
+        app.post("/pictures", verifyToken, upload.single("image"), async (req, res) => {
+            if (!req.file) {
+                return res.status(400).send({ message: "no image received." });
             };
 
-            try{
+            try {
                 const cloudinaryResult = await uploadTocloudinary(req.file.buffer);
                 const pictureDoc = {
                     url: cloudinaryResult.secure_url,
@@ -150,18 +209,18 @@ async function run() {
                 };
 
                 const result = await picturesCollection.insertOne(pictureDoc);
-                res.status(201).send({message: "image has been uploaded"});
-            }catch{
-                res.status(500).send({message: "unable to upload image"});
+                res.status(201).send({ message: "image has been uploaded" });
+            } catch {
+                res.status(500).send({ message: "unable to upload image" });
             }
         });
 
-        app.post("/pictures/certification", upload.single("image"), async (req, res)=>{
-            if(!req.file){
-                return res.status(400).send({message: "no image received."});
+        app.post("/pictures/certification", verifyToken, upload.single("image"), async (req, res) => {
+            if (!req.file) {
+                return res.status(400).send({ message: "no image received." });
             };
 
-            try{
+            try {
                 const cloudinaryResult = await uploadTocloudinary(req.file.buffer);
                 const pictureDoc = {
                     url: cloudinaryResult.secure_url,
@@ -170,18 +229,18 @@ async function run() {
                 };
 
                 const result = await picturesCollection.insertOne(pictureDoc);
-                res.status(201).send({message: "image has been uploaded"});
-            }catch{
-                res.status(500).send({message: "unable to upload image!"});
+                res.status(201).send({ message: "image has been uploaded" });
+            } catch {
+                res.status(500).send({ message: "unable to upload image!" });
             };
         });
 
-        app.post("/pictures/projects", upload.single("image"), async(req, res)=>{
-            if(!req.file){
-                return res.status(400).send({message: "no images received."});
+        app.post("/pictures/projects", upload.single("image"), async (req, res) => {
+            if (!req.file) {
+                return res.status(400).send({ message: "no images received." });
             };
 
-            try{
+            try {
                 const cloudinaryResult = await uploadTocloudinary(req.file.buffer);
                 const pictureDoc = {
                     url: cloudinaryResult.secure_url,
@@ -190,14 +249,14 @@ async function run() {
                 };
 
                 const result = await picturesCollection.insertOne(pictureDoc);
-                res.status(201).send({message: "image has been uploaded"});
-            }catch{
-                res.status(500).send({message: "unable to upload image."});
+                res.status(201).send({ message: "image has been uploaded" });
+            } catch {
+                res.status(500).send({ message: "unable to upload image." });
             }
         });
 
         //picture getting api:
-        app.get("/pictures", async(req, res)=>{
+        app.get("/pictures", async (req, res) => {
             const pictures = await picturesCollection.find().toArray();
             res.send(pictures);
         })
