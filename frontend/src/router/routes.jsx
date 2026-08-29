@@ -4,6 +4,7 @@ import ErrorPage from "../layouts/ErrorPage";
 import Home from "../pages/Home";
 import Login from "../pages/authentication/Login";
 import Registration from "../pages/authentication/Registration";
+import Authlayout from "../layouts/Authlayout";
 
 const routes = createBrowserRouter([
     {
@@ -12,8 +13,13 @@ const routes = createBrowserRouter([
         errorElement: ErrorPage,
         children: [
             { index: true, Component: Home },
+        ]
+    },
+    {
+        path: "/", Component: Authlayout,
+        children: [
             {path: "login", Component: Login},
-            {path: "registration",Component: Registration}
+            {path: "registration", Component: Registration}
         ]
     }
 ]);

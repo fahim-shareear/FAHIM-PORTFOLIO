@@ -1,7 +1,7 @@
 
 const Login = () => {
     return (
-        <div>
+        <div className="w-full">
             <div>
                 <div>
                     <h2>log in now</h2>
