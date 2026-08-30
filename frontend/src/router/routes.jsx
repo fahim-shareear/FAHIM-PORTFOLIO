@@ -3,8 +3,11 @@ import RootLayout from "../layouts/RootLayout";
 import ErrorPage from "../layouts/ErrorPage";
 import Home from "../pages/Home";
 import Login from "../pages/authentication/Login";
-import Registration from "../pages/authentication/Registration";
 import Authlayout from "../layouts/Authlayout";
+import DashboardLayout from "../layouts/DashboardLayout";
+import DashboardHome from "../pages/components/Dashboard/DashboardHome";
+import ProjectsPost from "../pages/components/Dashboard/ProjectsPost";
+import CertificationPost from "../pages/components/Dashboard/CertificationPost";
 
 const routes = createBrowserRouter([
     {
@@ -19,7 +22,14 @@ const routes = createBrowserRouter([
         path: "/", Component: Authlayout,
         children: [
             {path: "login", Component: Login},
-            {path: "registration", Component: Registration}
+        ]
+    },
+    {
+        path: "/dashboard", element: <DashboardLayout></DashboardLayout>,
+        children: [
+            {index: true, Component: DashboardHome},
+            {path: "projects-post", Component: ProjectsPost},
+            {path: "certification-post", Component: CertificationPost}
         ]
     }
 ]);
