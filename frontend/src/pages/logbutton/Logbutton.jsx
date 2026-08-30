@@ -28,7 +28,7 @@ const Logbutton = () => {
                     Log In
                 </Link>
                 {
-                    user && <Link to="/dashboard" className="log-link" onClick={()=> setLogOpen(false)}>Dashboard</Link>
+                    user && <Link to="/dashboard" className="log-link" onClick={()=> setLogOpen(false)}>Dashboard</Link> 
                 }
             </div>
         </div>
