@@ -1,6 +1,42 @@
+import { useContext, useState } from "react";
 import "../../all-css/login.css";
+import { Authcontext } from "../../authcontext/Authcontxt";
+import { useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import { FaEyeSlash } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const Login = () => {
+    const { logInUser } = useContext(Authcontext);
+    const navigate = useNavigate();
+    const { register, handleSubmit, setError, formState: { errors }, } = useForm();
+    const [eye, setEye] = useState(false);
+
+    const handleEye = (e) => {
+        e.preventDefault();
+        setEye(!eye)
+    }
+
+    const handleLogin = (data) =>{
+        logInUser(data.email, data.password)
+            .then(()=>{
+                navigate(location.state?.from?.pathname || "/dashboard");
+                toast.success("Welcome Back", {
+                    position: "top-right",
+                    duration: 3000,
+                    style:{
+                        background: "#00EA50",
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: "18px",
+                    }
+                })
+            }).catch(()=>{
+                setError("root", {message: "invalid email or password"});
+            })
+    };
+
     return (
         <div className="login_container">
             <div className="auth-card">
@@ -14,7 +50,7 @@ const Login = () => {
                     <span className="prompt">&gt;</span> access_terminal<span className="cursor">_</span>
                 </h2>
 
-                <form className="auth-form">
+                <form className="auth-form" onSubmit={handleSubmit(handleLogin)}>
                     <label className="field-label" htmlFor="email">
                         <span className="prompt">$</span> email
                     </label>
@@ -24,23 +60,33 @@ const Login = () => {
                         className="field-input"
                         placeholder="name@domain.com"
                         autoComplete="email"
+                        {...register("email", { required: true })}
                     />
+                    {errors.email && <p className="auth-error">email is required</p>}
 
-                    <label className="field-label" htmlFor="password">
-                        <span className="prompt">$</span> password
-                    </label>
-                    <input
-                        id="password"
-                        type="password"
-                        className="field-input"
-                        placeholder="••••••••"
-                        autoComplete="current-password"
-                    />
+                    <div className="relative">
+                        <label className="field-label" htmlFor="password">
+                            <span className="prompt">$</span> password
+                        </label>
+                        <input
+                            id="password"
+                            type={eye ? "text" : "password"}
+                            className="field-input"
+                            placeholder="••••••••"
+                            autoComplete="current-password"
+                            {...register("password", { required: true })}
+                        />
+                        <button className="top-9 right-5 absolute text-xl text-[#00EA50] cursor-pointer" onClick={handleEye}>
+                            {eye ? <FaEyeSlash /> : <FaEye />}
+                        </button>
+                        {errors.password && <p className="auth-error">password is required</p>}
+                        { }
+                    </div>
 
                     <div className="auth-form__meta">
                         <a className="auth-link">forgot password?</a>
                     </div>
-
+                    {errors.root && <p className="auth-error">{errors.root.message}</p>}
                     <button type="submit" className="auth-btn">
                         log in
                     </button>

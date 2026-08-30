@@ -1,46 +1,43 @@
 import { useEffect, useState } from "react";
 import { Authcontext } from "./Authcontxt";
-import {createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithPopup} from "firebase/auth";
-import {auth} from "../firebase/firebase.init";
+import useAxios from "../axios/useAxios";
 
-const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({children}) =>{
     const [loader, setLoader] = useState(true);
     const [user, setUser] = useState(null);
+    const axiosSecure = useAxios();
 
-    const popUpLogin = () =>{
+    const logInUser = async (email, password) =>{
         setLoader(true);
-        return signInWithPopup(auth, googleProvider);
+        const res = await axiosSecure.post("/login", {email, password});
+        setUser({email});
+        setLoader(false);
+        return res;
     };
 
-    const registerUser = (email, password) =>{
-        setLoader(true);
-        return createUserWithEmailAndPassword(auth, email, password);
+    const logOutUser = async () =>{
+        await axiosSecure.post("/logout");
+        setUser(null);
     };
 
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser)=>{
-            setUser(currentUser);
-            setLoader(false);
-        });
-
-        return () => unsubscribe();
-    }, []);
-
+    useEffect(()=> {
+        axiosSecure.get("/me").then((res) =>{
+            setUser(res.data);
+        }).catch(()=> setUser(null)).finally(()=> setLoader(false));
+    }, [axiosSecure]);
 
     const authInfo = {
-        popUpLogin,
+        logInUser,
+        logOutUser,
         loader,
-        registerUser,
-        user
+        user,
     }
-    return (
-        <Authcontext value={authInfo}>
-            {children}
-        </Authcontext>
-    );
-};
+
+    return <Authcontext value={authInfo}>
+        {children}
+    </Authcontext>
+}
+
 
 export default AuthProvider;
