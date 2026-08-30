@@ -122,9 +122,9 @@ async function run() {
 
         //password update related api:
         app.patch("/change-password", verifyToken, async(req, res)=>{
-            const {currentPassowr, newPassword} = req.body;
+            const {currentPassword, newPassword} = req.body;
 
-            if(!currentPassowr || !newPassword){
+            if(!currentPassword || !newPassword){
                 return res.status(400).send({message: "current and new password are required"});
             };
 
