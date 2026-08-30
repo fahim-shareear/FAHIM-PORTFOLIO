@@ -120,6 +120,42 @@ async function run() {
             res.send({email: req.decodedUser.email});
         });
 
+        //password update related api:
+        app.patch("/change-password", verifyToken, async(req, res)=>{
+            const {currentPassowr, newPassword} = req.body;
+
+            if(!currentPassowr || !newPassword){
+                return res.status(400).send({message: "current and new password are required"});
+            };
+
+            if(newPassword.length < 8){
+                return res.status(400).send({message: "new password must be at least 8 character long"});
+            };
+
+            try{
+                const user = await userCollection.findOne({email: req.decodedUser.email});
+
+                if(!user){
+                    return res.status(400).send({message: "user not found!"});
+                };
+
+                const passwordMatches = await bcrypt.compare(currentPassowr, user.passwordHash);
+                if(!passwordMatches){
+                    return res.status(401).send({message: "current passwor is incorrect"});
+                };
+
+                const newHash = await bcrypt.hash(newPassword, 12);
+                await userCollection.updateOne(
+                    {email: req.decodedUser.email},
+                    {$set: {passwordHash: newHash}}
+                );
+
+                res.send({message: "password updated"});
+            }catch(error){
+                res.status(500).send({message: "unable to update password."});
+            };
+        });
+
 
         //projects related apis:
         app.get("/projects", async (req, res) => {
