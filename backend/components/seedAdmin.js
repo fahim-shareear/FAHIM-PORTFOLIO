@@ -1,5 +1,5 @@
-require('dotenv').config();
-const {MongoCLient, ServerApiVersion} = require('mongodb');
+require('dotenv').config({path: require('path').resolve(__dirname, "../../backend/.env")});
+const {MongoClient, ServerApiVersion} = require('mongodb');
 const bcrypt = require('bcrypt');
 
 const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGO_PASSWORD}@learning-server.eft4uy8.mongodb.net/?appName=learning-server`;
