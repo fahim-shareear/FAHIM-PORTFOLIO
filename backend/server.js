@@ -116,9 +116,45 @@ async function run() {
             }).send({message: "logged out"});
         });
 
-        app.get("/me", verifyToken, (req, res)=>{
-            res.send({email: req.decodedUser.email});
+        app.get("/me", verifyToken, async(req, res)=>{
+            const user = await userCollection.findOne(
+                {email: req.decodedUser.email},
+                {projection: {passwordHash: 0}},
+            );
+
+            res.send(user);
         });
+
+        app.post("/update-profile", verifyToken, upload.single("image"), async(req, res)=>{
+            const {name} = req.body;
+            const updatedField = [];
+
+            if(name){
+                updatedField.name = name;
+            };
+
+            if(req.file){
+                try{
+                    const cloudinaryResult = await uploadTocloudinary(req.file.buffer);
+                    updatedField.profilePicture = cloudinaryResult.secure_url;
+                }catch(error){
+                    return res.status(500).send({message: "unable to upload profile picture"})
+                }
+            };
+
+            if(Object.keys(updatedField).length === 0){
+                return res.status(400).send({message: "nothing to update"});
+            };
+
+            try{
+                await userCollection.updateOne(
+                    {email: req.decodedUser.email},
+                    {$set: updatedField},
+                )
+            }catch(error){
+                res.status(500).send({message: "unable to update profile"})
+            }
+        })
 
         //password update related api:
         app.patch("/change-password", verifyToken, async(req, res)=>{

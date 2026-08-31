@@ -23,8 +23,8 @@ const Login = () => {
             .then(()=>{
                 navigate(location.state?.from?.pathname || "/dashboard");
                 toast.success("Welcome Back", {
-                    position: "top-right",
-                    duration: 3000,
+                    position: "bottom-center",
+                    duration: 2000,
                     style:{
                         background: "#00EA50",
                         color: "white",
@@ -80,7 +80,6 @@ const Login = () => {
                             {eye ? <FaEyeSlash /> : <FaEye />}
                         </button>
                         {errors.password && <p className="auth-error p-2 capitalize text-sm text-red-500">password is required</p>}
-                        { }
                     </div>
 
                     <div className="auth-form__meta">

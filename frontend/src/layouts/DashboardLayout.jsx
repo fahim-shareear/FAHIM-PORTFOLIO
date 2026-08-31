@@ -1,15 +1,26 @@
 import { useContext } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
 import { Authcontext } from "../authcontext/Authcontxt";
+import { toast } from "react-toastify";
 
 
 const DashboardLayout = () => {
-    const {logOutUser} = useContext(Authcontext);
+    const { logOutUser } = useContext(Authcontext);
     const navigate = useNavigate();
 
-    const handleLogOut = () =>{
+    const handleLogOut = () => {
         logOutUser();
         navigate("/login");
+        toast.success("See you again.", {
+            position: "bottom-center",
+            duration: 2000,
+            style: {
+                background: "#00EA50",
+                color: "white",
+                fontWeight: "bold",
+                fontSize: "18px",
+            }
+        })
     };
 
     return (
