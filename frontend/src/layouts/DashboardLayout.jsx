@@ -10,7 +10,7 @@ const DashboardLayout = () => {
 
     const handleLogOut = () => {
         logOutUser();
-        navigate("/login");
+        navigate("/");
         toast.success("See you again.", {
             position: "bottom-center",
             duration: 2000,
