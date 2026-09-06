@@ -62,7 +62,7 @@ const ProjectsPost = () => {
                         {errors.thumbnail && <p className="text-[#00EA50] font-bold">Thumbnail is missing.</p>}
                     </label>
 
-                    <button type="submit" className="post-btn">post project</button>
+                    <button type="submit" className="post-btn uppercase font-bold">post project</button>
                 </form>
             </div>
         </div>
