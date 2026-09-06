@@ -9,6 +9,7 @@ import DashboardHome from "../pages/components/Dashboard/DashboardHome";
 import ProjectsPost from "../pages/components/Dashboard/ProjectsPost";
 import CertificationPost from "../pages/components/Dashboard/CertificationPost";
 import PrivateRouter from "../authcontext/PrivateRouter";
+import ProjectDetails from "../pages/components/ProjectDetails";
 
 const routes = createBrowserRouter([
     {
@@ -17,6 +18,7 @@ const routes = createBrowserRouter([
         errorElement: <ErrorPage></ErrorPage>,
         children: [
             { index: true, Component: Home },
+            {path: "/projects/:id", Component: ProjectDetails}
         ]
     },
     {

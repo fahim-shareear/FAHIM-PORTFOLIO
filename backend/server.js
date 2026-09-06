@@ -111,7 +111,7 @@ async function run() {
         app.post("/logout", (req, res) => {
             res.clearCookie("token", {
                 httpOnly: true,
-                secure: process.env.NOVE_ENV === "production",
+                secure: process.env.NODE_ENV === "production",
                 sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             }).send({ message: "logged out" });
         });
@@ -151,7 +151,7 @@ async function run() {
                     { email: req.decodedUser.email },
                     { $set: updatedField },
                 );
-                res.send({message: "profile updated", ...updatedField})
+                res.send({ message: "profile updated", ...updatedField })
             } catch (error) {
                 res.status(500).send({ message: "unable to update profile" })
             }
@@ -176,9 +176,9 @@ async function run() {
                     return res.status(400).send({ message: "user not found!" });
                 };
 
-                const passwordMatches = await bcrypt.compare(currentPassowr, user.passwordHash);
+                const passwordMatches = await bcrypt.compare(currentPassword, user.passwordHash);
                 if (!passwordMatches) {
-                    return res.status(401).send({ message: "current passwor is incorrect" });
+                    return res.status(401).send({ message: "current password is incorrect" });
                 };
 
                 const newHash = await bcrypt.hash(newPassword, 12);
@@ -196,7 +196,7 @@ async function run() {
 
         //projects related apis:
         app.get("/projects", async (req, res) => {
-            const projects = await projectCollection.find().toArray();
+            const projects = await projectCollection.find().sort({ createdAt: -1 }).toArray();
             if (projects.length === 0) {
                 return res.status(404).send({ message: "No Projects to Show" })
             };
@@ -205,17 +205,17 @@ async function run() {
 
         //project posting api:
         app.post("/projects", verifyToken, upload.fields([
-            {name: "image", maxCount: 1},
-            {name: "screenshotFile", maxCount: 5},
-        ]), async(req, res)=>{
+            { name: "image", maxCount: 1 },
+            { name: "screenshots", maxCount: 5 },
+        ]), async (req, res) => {
             const thumbnailFile = req.files?.image?.[0];
             const screenshotFiles = req.files?.screenshots || [];
 
-            if(!thumbnailFile){
-                return res.status(400).send({message: "thumbnail image is required"});
+            if (!thumbnailFile) {
+                return res.status(400).send({ message: "thumbnail image is required" });
             };
 
-            try{
+            try {
                 const thumbnailResult = await uploadTocloudinary(thumbnailFile.buffer);
 
                 const screenshotResults = await Promise.all(
@@ -226,17 +226,17 @@ async function run() {
                     name: req.body.name,
                     description: req.body.description,
                     livelink: req.body.livelink,
-                    gitlink: req.body.gitlink,
+                    gitLink: req.body.gitLink,
                     teckStack: req.body.teckStack,
                     thumbNail: thumbnailResult.secure_url,
-                    screenshots: screenshotResults.map((r)=> r.secure_url),
+                    screenshots: screenshotResults.map((r) => r.secure_url),
                     createdAt: new Date(),
                 };
 
                 const result = await projectCollection.insertOne(projectDoc);
-                res.status(201).send({message: "project added", id: result.insertedId});
-            }catch(error){
-                res.status(500).send({message: "unable to post"});
+                res.status(201).send({ message: "project added", id: result.insertedId });
+            } catch (error) {
+                res.status(500).send({ message: "unable to post" });
             }
         })
 
@@ -334,7 +334,7 @@ async function run() {
             };
         });
 
-        app.post("/pictures/projects", upload.single("image"), async (req, res) => {
+        app.post("/pictures/projects", verifyToken, upload.single("image"), async (req, res) => {
             if (!req.file) {
                 return res.status(400).send({ message: "no images received." });
             };
