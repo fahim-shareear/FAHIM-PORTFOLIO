@@ -39,7 +39,7 @@ const Feedback = () => {
 
     //handle form submission:
     const handleFormSubmit = (data) =>{
-        console.log(data);
+        // console.log(data);
         const profileImg = data.image[0];
         setSubmitting(true);
 
