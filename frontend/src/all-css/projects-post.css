@@ -1,0 +1,157 @@
+.projects-post {
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 64px); /* subtract your top bar's height */
+}
+
+.projects-post__title {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 22px;
+    font-weight: 600;
+    color: #E8FDF3;
+    margin: 0 0 20px;
+}
+
+.projects-post__title .prompt {
+    color: #00E5A0;
+    margin-right: 8px;
+}
+
+.post-card {
+    max-width: 640px;
+    background: rgba(6, 20, 15, 0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 229, 160, 0.35);
+    border-radius: 10px;
+    padding: 24px 28px 28px;
+    box-shadow: 0 0 24px rgba(0, 229, 160, 0.1);
+}
+
+.post-card__chrome {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.post-card__chrome .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(0, 229, 160, 0.3);
+}
+
+.post-card__heading {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 15px;
+    font-weight: 500;
+    color: #7FA895;
+    letter-spacing: 0.4px;
+    margin: 0 0 18px;
+    text-transform: uppercase;
+}
+
+.post-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.field-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: #7FA895;
+    margin: 14px 0 6px;
+}
+
+.field-label .prompt {
+    color: #00E5A0;
+    margin-right: 4px;
+}
+
+.field-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(0, 229, 160, 0.25);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: #E8FDF3;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.field-input::placeholder {
+    color: #4A6559;
+}
+
+.field-input:focus {
+    border-color: #00E5A0;
+    box-shadow: 0 0 0 3px rgba(0, 229, 160, 0.15);
+}
+
+.post-form__row {
+    display: flex;
+    gap: 16px;
+}
+
+.post-form__col {
+    flex: 1;
+    min-width: 0;
+}
+
+.dropzone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed rgba(0, 229, 160, 0.35);
+    border-radius: 6px;
+    padding: 20px;
+    cursor: pointer;
+    color: #4A6559;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.dropzone:hover {
+    border-color: #00E5A0;
+    background: rgba(0, 229, 160, 0.05);
+}
+
+.dropzone__preview {
+    max-height: 100px;
+    border-radius: 4px;
+}
+
+.post-btn {
+    margin-top: 24px;
+    padding: 11px;
+    background: #00E5A0;
+    color: #04150F;
+    border: none;
+    border-radius: 6px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.post-btn:hover {
+    background: #33EBB4;
+    box-shadow: 0 0 16px rgba(0, 229, 160, 0.4);
+}
+
+.post-btn:active {
+    transform: scale(0.98);
+}
