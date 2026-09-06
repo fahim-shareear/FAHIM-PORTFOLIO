@@ -74,26 +74,26 @@ async function run() {
         app.post("/login", async (req, res) => {
             const { email, password } = req.body;
 
-            if(!email || !password){
-                return res.status.send({message: "email and password are required"});
+            if (!email || !password) {
+                return res.status(400).send({ message: "email and password are required" });
             };
 
-            try{
-                const user = await userCollection.findOne({email});
-                if(!user){
-                    return res.status(401).send({message: "invalid email or password"});
+            try {
+                const user = await userCollection.findOne({ email });
+                if (!user) {
+                    return res.status(401).send({ message: "invalid email or password" });
                 };
 
                 const passwordMatches = await bcrypt.compare(password, user.passwordHash);
-                if(!passwordMatches){
-                    return res.status(401).send({message: "invalid email or password"});
+                if (!passwordMatches) {
+                    return res.status(401).send({ message: "invalid email or password" });
                 }
 
 
                 const token = jwt.sign(
-                    {email: user.email, id: user._id},
+                    { email: user.email, id: user._id },
                     process.env.JWT_SECRET,
-                    {expiresIn: "22d"}
+                    { expiresIn: "22d" }
                 );
 
                 res.cookie("token", token, {
@@ -101,94 +101,95 @@ async function run() {
                     secure: process.env.NODE_ENV === "production",
                     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
                     maxAge: 22 * 24 * 60 * 60 * 1000,
-                }).send({message: "logged in"});
-            }catch (error){
-                res.status(500).send({message: "log in failed"});
+                }).send({ message: "logged in" });
+            } catch (error) {
+                res.status(500).send({ message: "log in failed" });
             };
         });
 
 
-        app.post("/logout", (req, res)=>{
+        app.post("/logout", (req, res) => {
             res.clearCookie("token", {
                 httpOnly: true,
                 secure: process.env.NOVE_ENV === "production",
                 sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-            }).send({message: "logged out"});
+            }).send({ message: "logged out" });
         });
 
-        app.get("/me", verifyToken, async(req, res)=>{
+        app.get("/me", verifyToken, async (req, res) => {
             const user = await userCollection.findOne(
-                {email: req.decodedUser.email},
-                {projection: {passwordHash: 0}},
+                { email: req.decodedUser.email },
+                { projection: { passwordHash: 0 } },
             );
 
             res.send(user);
         });
 
-        app.post("/update-profile", verifyToken, upload.single("image"), async(req, res)=>{
-            const {name} = req.body;
-            const updatedField = [];
+        app.post("/update-profile", verifyToken, upload.single("image"), async (req, res) => {
+            const { name } = req.body;
+            const updatedField = {};
 
-            if(name){
+            if (name) {
                 updatedField.name = name;
             };
 
-            if(req.file){
-                try{
+            if (req.file) {
+                try {
                     const cloudinaryResult = await uploadTocloudinary(req.file.buffer);
                     updatedField.profilePicture = cloudinaryResult.secure_url;
-                }catch(error){
-                    return res.status(500).send({message: "unable to upload profile picture"})
+                } catch (error) {
+                    return res.status(500).send({ message: "unable to upload profile picture" })
                 }
             };
 
-            if(Object.keys(updatedField).length === 0){
-                return res.status(400).send({message: "nothing to update"});
+            if (Object.keys(updatedField).length === 0) {
+                return res.status(400).send({ message: "nothing to update" });
             };
 
-            try{
+            try {
                 await userCollection.updateOne(
-                    {email: req.decodedUser.email},
-                    {$set: updatedField},
-                )
-            }catch(error){
-                res.status(500).send({message: "unable to update profile"})
+                    { email: req.decodedUser.email },
+                    { $set: updatedField },
+                );
+                res.send({message: "profile updated", ...updatedField})
+            } catch (error) {
+                res.status(500).send({ message: "unable to update profile" })
             }
         })
 
         //password update related api:
-        app.patch("/change-password", verifyToken, async(req, res)=>{
-            const {currentPassword, newPassword} = req.body;
+        app.patch("/change-password", verifyToken, async (req, res) => {
+            const { currentPassword, newPassword } = req.body;
 
-            if(!currentPassword || !newPassword){
-                return res.status(400).send({message: "current and new password are required"});
+            if (!currentPassword || !newPassword) {
+                return res.status(400).send({ message: "current and new password are required" });
             };
 
-            if(newPassword.length < 8){
-                return res.status(400).send({message: "new password must be at least 8 character long"});
+            if (newPassword.length < 8) {
+                return res.status(400).send({ message: "new password must be at least 8 character long" });
             };
 
-            try{
-                const user = await userCollection.findOne({email: req.decodedUser.email});
+            try {
+                const user = await userCollection.findOne({ email: req.decodedUser.email });
 
-                if(!user){
-                    return res.status(400).send({message: "user not found!"});
+                if (!user) {
+                    return res.status(400).send({ message: "user not found!" });
                 };
 
                 const passwordMatches = await bcrypt.compare(currentPassowr, user.passwordHash);
-                if(!passwordMatches){
-                    return res.status(401).send({message: "current passwor is incorrect"});
+                if (!passwordMatches) {
+                    return res.status(401).send({ message: "current passwor is incorrect" });
                 };
 
                 const newHash = await bcrypt.hash(newPassword, 12);
                 await userCollection.updateOne(
-                    {email: req.decodedUser.email},
-                    {$set: {passwordHash: newHash}}
+                    { email: req.decodedUser.email },
+                    { $set: { passwordHash: newHash } }
                 );
 
-                res.send({message: "password updated"});
-            }catch(error){
-                res.status(500).send({message: "unable to update password."});
+                res.send({ message: "password updated" });
+            } catch (error) {
+                res.status(500).send({ message: "unable to update password." });
             };
         });
 
@@ -203,15 +204,41 @@ async function run() {
         });
 
         //project posting api:
-        app.post("/projects", verifyToken, async (req, res) => {
-            const projects = req.body;
-            try {
-                const result = await projectCollection.insertOne(projects);
-                res.status(201).send({ message: "project added", id: result.insertedId })
-            } catch (error) {
-                return res.status(500).send({ message: "unable to post!!" })
+        app.post("/projects", verifyToken, upload.fields([
+            {name: "image", maxCount: 1},
+            {name: "screenshotFile", maxCount: 5},
+        ]), async(req, res)=>{
+            const thumbnailFile = req.files?.image?.[0];
+            const screenshotFiles = req.files?.screenshots || [];
+
+            if(!thumbnailFile){
+                return res.status(400).send({message: "thumbnail image is required"});
+            };
+
+            try{
+                const thumbnailResult = await uploadTocloudinary(thumbnailFile.buffer);
+
+                const screenshotResults = await Promise.all(
+                    screenshotFiles.map((file) => uploadTocloudinary(file.buffer))
+                );
+
+                const projectDoc = {
+                    name: req.body.name,
+                    description: req.body.description,
+                    livelink: req.body.livelink,
+                    gitlink: req.body.gitlink,
+                    teckStack: req.body.teckStack,
+                    thumbNail: thumbnailResult.secure_url,
+                    screenshots: screenshotResults.map((r)=> r.secure_url),
+                    createdAt: new Date(),
+                };
+
+                const result = await projectCollection.insertOne(projectDoc);
+                res.status(201).send({message: "project added", id: result.insertedId});
+            }catch(error){
+                res.status(500).send({message: "unable to post"});
             }
-        });
+        })
 
         //project updating api:
         app.patch("/projects/:id", verifyToken, async (req, res) => {
