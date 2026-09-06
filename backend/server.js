@@ -241,22 +241,48 @@ async function run() {
         })
 
         //project updating api:
-        app.patch("/projects/:id", verifyToken, async (req, res) => {
+        //project updating api:
+        app.patch("/projects/:id", verifyToken, upload.fields([
+            { name: "image", maxCount: 1 },
+            { name: "screenshots", maxCount: 5 },
+        ]), async (req, res) => {
             const id = req.params.id;
-            const updatedData = req.body;
             const query = { _id: new ObjectId(id) };
-            const updatedDoc = {
-                $set: updatedData
-            };
+
+            const updatedFields = {};
+            if (req.body.name) updatedFields.name = req.body.name;
+            if (req.body.description) updatedFields.description = req.body.description;
+            if (req.body.livelink) updatedFields.livelink = req.body.livelink;
+            if (req.body.gitLink) updatedFields.gitLink = req.body.gitLink;
+            if (req.body.teckStack) updatedFields.teckStack = req.body.teckStack;
 
             try {
-                const result = await projectCollection.updateOne(query, updatedDoc);
+                const newThumbnail = req.files?.image?.[0];
+                if (newThumbnail) {
+                    const thumbnailResult = await uploadTocloudinary(newThumbnail.buffer);
+                    updatedFields.thumbNail = thumbnailResult.secure_url;
+                }
+
+                const newScreenshots = req.files?.screenshots;
+                if (newScreenshots && newScreenshots.length > 0) {
+                    const screenshotResults = await Promise.all(
+                        newScreenshots.map((file) => uploadTocloudinary(file.buffer))
+                    );
+                    updatedFields.screenshots = screenshotResults.map((r) => r.secure_url);
+                }
+
+                if (Object.keys(updatedFields).length === 0) {
+                    return res.status(400).send({ message: "nothing to update" });
+                }
+
+                const result = await projectCollection.updateOne(query, { $set: updatedFields });
                 if (result.matchedCount === 0) {
                     return res.status(404).send({ message: "project not found" });
-                };
-                res.status(200).send(result);
+                }
+
+                res.status(200).send({ message: "project updated", ...updatedFields });
             } catch (error) {
-                res.status(500).send({ message: "unable to update project." })
+                res.status(500).send({ message: "unable to update project." });
             }
         });
 
