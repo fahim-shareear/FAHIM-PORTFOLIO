@@ -241,7 +241,6 @@ async function run() {
         })
 
         //project updating api:
-        //project updating api:
         app.patch("/projects/:id", verifyToken, upload.fields([
             { name: "image", maxCount: 1 },
             { name: "screenshots", maxCount: 5 },
