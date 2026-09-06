@@ -11,6 +11,10 @@ const ProjectsPost = () => {
         if (file) setImagePreview(URL.createObjectURL(file));
     };
 
+    const handleFormSubmit = (e) =>{
+        e.preventDefault();
+    }
+
     return (
         <div className="projects-post">
             <h1 className="projects-post__title">
@@ -25,7 +29,7 @@ const ProjectsPost = () => {
                 </div>
                 <h2 className="post-card__heading">add project</h2>
 
-                <form className="post-form" onSubmit={handleSubmit}>
+                <form className="post-form" onSubmit={handleSubmit(handleFormSubmit)}>
                     <label className="field-label"><span className="prompt">$</span> title</label>
                     <input type="text" className="field-input" placeholder="Project title" {...register("projectTitle", {required: true})} />
                     {errors.projectTitle && <p className="text-[#00EA50] font-bold">Project name is missing.</p>}
@@ -49,7 +53,7 @@ const ProjectsPost = () => {
 
                     <label className="field-label"><span className="prompt">$</span> tech_stack</label>
                     <input type="text" className="field-input" placeholder="React, Node.js, MongoDB (comma separated)" {...register("teckStack", {required: true})} />
-                    {errors.teckStak && <p className="text-[#00EA50] font-bold">Please input which tech stack has been used on this project</p>}
+                    {errors.teckStack && <p className="text-[#00EA50] font-bold">Please input which tech stack has been used on this project</p>}
 
                     <label className="field-label"><span className="prompt">$</span> thumbnail</label>
                     <label className="dropzone">
@@ -59,8 +63,8 @@ const ProjectsPost = () => {
                             <span className="dropzone__text">drop or click to upload image</span>
                         )}
                         <input type="file" accept="image/*" onChange={handleImageChange} hidden {...register("thumbnail", {required: true})} />
-                        {errors.thumbnail && <p className="text-[#00EA50] font-bold">Thumbnail is missing.</p>}
                     </label>
+                    {errors.thumbnail && <p className="text-[#00EA50] font-bold">Thumbnail is missing.</p>}
 
                     <button type="submit" className="post-btn uppercase font-bold">post project</button>
                 </form>
