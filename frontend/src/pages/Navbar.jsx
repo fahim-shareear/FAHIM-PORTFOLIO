@@ -10,7 +10,7 @@ const menuItems = [
     { label: "About", to: "#about" },
     { label: "Tech Stack", to: "#tech-stack" },
     { label: "Projects", to: "#projects" },
-    { label: "Certification", to: "#certification" },
+    { label: "Career", to: "#certification" },
     { label: "Get In Touch", to: "#contact" },
 ];
 
@@ -25,7 +25,7 @@ const Navbar = () => {
 
     const handleItem = (e, item) =>{
         setIsOpen(false);
-        if(item.label === "Certification"){
+        if(item.to === "#certification"){
             e.preventDefault();
             openCertificationDrawer();
         };

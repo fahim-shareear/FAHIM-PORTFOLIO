@@ -66,8 +66,8 @@ async function run() {
         const feedbackCollection = portfolio.collection("feedback");
         const clientCollection = portfolio.collection("clients");
         const projectCollection = portfolio.collection("projects");
-        const picturesCollection = portfolio.collection("pictures");
         const userCollection = portfolio.collection("users");
+        const careearCollection = portfolio.collection("career");
 
 
         //auth related api's:
@@ -300,6 +300,43 @@ async function run() {
             }
         });
 
+        //career & course related api:
+        app.post("/career", verifyToken, async(req, res)=>{
+            const career = req.body;
+            const result = await careearCollection.insertOne(career);
+            res.send(result);
+        });
+
+        app.patch("/career/:id", verifyToken, async(req, res)=>{
+            const id = req.params.id;
+            const query = {_id: new ObjectId(id)};
+            const updatedFields = req.body;
+
+            if(!updatedFields || Object.keys(updatedFields).length === 0){
+                return res.status(400).send({message: "nothing to update."});
+            };
+
+            try{
+                const result = await careearCollection.updateOne(query, {$set: updatedFields});
+                if(result.matchedCount = 0){
+                    return res.status(404).send({message: "career entry not found"});
+                };
+                return res.send(result);
+            }catch(error){
+                return res.status(500).send({message: "internal error occured"})
+            }
+        })
+
+        app.get("/career", async(req, res)=>{
+            try{
+                const result = await careearCollection.find().toArray();
+                return res.send(result);
+            }catch(error){
+                return res.status(500).send({message: "unable to fetch career data"})
+            }
+        });
+        
+
         //feedback related api's:
         app.get("/feedback", async (req, res) => {
             const feedBack = await feedbackCollection.find().toArray();
@@ -311,79 +348,12 @@ async function run() {
             const feedBack = req.body;
             try {
                 const result = await feedbackCollection.insertOne(feedBack);
-                res.status(201).send({ message: "Your feedback is appreciated." })
+                res.send(result);
             } catch (error) {
                 return res.status(500).send({ message: "unable to post feedback right now." });
             };
         });
 
-
-        //picture related api start here:
-        app.post("/pictures", verifyToken, upload.single("image"), async (req, res) => {
-            if (!req.file) {
-                return res.status(400).send({ message: "no image received." });
-            };
-
-            try {
-                const cloudinaryResult = await uploadTocloudinary(req.file.buffer);
-                const pictureDoc = {
-                    url: cloudinaryResult.secure_url,
-                    publicId: cloudinaryResult.public_id,
-                    uploadedAt: new Date(),
-                };
-
-                const result = await picturesCollection.insertOne(pictureDoc);
-                res.status(201).send({ message: "image has been uploaded" });
-            } catch {
-                res.status(500).send({ message: "unable to upload image" });
-            }
-        });
-
-        app.post("/pictures/certification", verifyToken, upload.single("image"), async (req, res) => {
-            if (!req.file) {
-                return res.status(400).send({ message: "no image received." });
-            };
-
-            try {
-                const cloudinaryResult = await uploadTocloudinary(req.file.buffer);
-                const pictureDoc = {
-                    url: cloudinaryResult.secure_url,
-                    publicId: cloudinaryResult.public_id,
-                    uploadedAt: new Date(),
-                };
-
-                const result = await picturesCollection.insertOne(pictureDoc);
-                res.status(201).send({ message: "image has been uploaded" });
-            } catch {
-                res.status(500).send({ message: "unable to upload image!" });
-            };
-        });
-
-        app.post("/pictures/projects", verifyToken, upload.single("image"), async (req, res) => {
-            if (!req.file) {
-                return res.status(400).send({ message: "no images received." });
-            };
-
-            try {
-                const cloudinaryResult = await uploadTocloudinary(req.file.buffer);
-                const pictureDoc = {
-                    url: cloudinaryResult.secure_url,
-                    publicId: cloudinaryResult.public_id,
-                    uploadedAt: new Date(),
-                };
-
-                const result = await picturesCollection.insertOne(pictureDoc);
-                res.status(201).send({ message: "image has been uploaded" });
-            } catch {
-                res.status(500).send({ message: "unable to upload image." });
-            }
-        });
-
-        //picture getting api:
-        app.get("/pictures", async (req, res) => {
-            const pictures = await picturesCollection.find().toArray();
-            res.send(pictures);
-        })
 
 
         await client.db("admin").command({ ping: 1 });
