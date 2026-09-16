@@ -2,24 +2,48 @@ import { useForm } from "react-hook-form";
 
 
 const CertificationPost = () => {
-    const { register, handleSubmit, reset } = useForm();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
 
+    const handleFormSubmit = (data) => {
+
+    }
 
     return (
-        <div>
-            <div>
-                <h1>Certification and Career timeline post dashboard:</h1>
+        <div className="">
+            <div className="p-4">
+                <h1 className="font-bold text-xl">Post Certifications:</h1>
             </div>
-            <div>
-                <form>
+            <div className="md:max-w-7xl mx-auto">
+                <form onSubmit={handleSubmit(handleFormSubmit)}>
                     <fieldset className="fieldset">
-                        <label className="label">Email</label>
-                        <input type="email" className="input" placeholder="Email" />
-                        <label className="label">Password</label>
-                        <input type="password" className="input" placeholder="Password" />
-                        <div><a className="link link-hover">Forgot password?</a></div>
-                        <button className="btn btn-neutral mt-4">Login</button>
+                        <div className="grid grid-cols-3 gap-5">
+                            <div className="flex flex-col gap-3">
+                                <label className="label font-bold text-xl text-white">Course Name:</label>
+                                <input type="text" className="input bg-white/5 border-0 border-b border-[#00EA50]" placeholder="Course Name" {...register("courseTitle", {required: true})} />
+                                {errors.courseTitle && <p className="font-bold text-sm text-[#00ea50]">Please enter the coure title</p>}
+                            </div>
+                            <div className="flex flex-col gap-3">
+                                <label className="label font-bold text-xl text-white">Duration:</label>
+                                <input type="number" className="input bg-white/5 border-0 border-b border-[#00EA50]" placeholder="months" {...register("duration", {required: true})} />
+                                {errors.duration && <p className="font-bold text-sm text-[#00ea50]">Please enter the course period</p>}
+                            </div>
+                            <div className="flex flex-col gap-3">
+                                <label className="label font-bold text-xl text-white">Institutions Name:</label>
+                                <input type="text" className="input bg-white/5 border-0 border-b border-[#00EA50]" placeholder="Institutions Name" {...register("instituteName", {required: true})} />
+                                {errors.instituteName && <p className="font-bold text-sm text-[#00EA50]">Please enter the Institutions name</p>}
+                            </div>
+                            <div className="flex flex-col gap-3">
+                                <label className="label font-bold text-xl text-white">Course Topics:</label>
+                                <textarea placeholder="Success" className="textarea textarea-success bg-white/5 border-0 border-b border-[#00EA50]" {...register("topics", { required: true })}></textarea>
+                                {errors.topics && <p className="font-bold text-sm text-[#00EA50]">Please enter the course topics</p>}
+                            </div>
+                            <div className="flex flex-col gap-3">
+                                <label className="label font-bold text-xl text-white">Upload certificate:</label>
+                                <input type="file" className="bg-white/5 border-0 border-b border-[#00EA50] text-xl" {...register("image")} />
+                            </div>
+                        </div>
+                        <button className="btn bg-white/4 border-[#00ea50] cursor-pointer mt-4">Submit</button>
                     </fieldset>
                 </form>
             </div>
