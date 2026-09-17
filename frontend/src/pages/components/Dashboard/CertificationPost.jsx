@@ -14,7 +14,9 @@ const CertificationPost = () => {
         formData.append("duration", data.duration);
         formData.append("instituteName", data.instituteName);
         formData.append("topics", data.topics);
-        formData.append("image", data.image[0]);
+        if(data.image && data.image[0]){
+            formData.append("image", data.image[0]);
+        };
 
         // console.log([...formData.entries()]);
         Swal.fire({

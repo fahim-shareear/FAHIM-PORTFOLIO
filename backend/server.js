@@ -68,7 +68,7 @@ async function run() {
         const projectCollection = portfolio.collection("projects");
         const userCollection = portfolio.collection("users");
         const careearCollection = portfolio.collection("career");
-        const certificationCollectio = portfolio.collection("certification");
+        const certificationCollection = portfolio.collection("certification");
 
 
         //auth related api's:
@@ -302,41 +302,41 @@ async function run() {
         });
 
         //career & course related api:
-        app.post("/career", verifyToken, async(req, res)=>{
+        app.post("/career", verifyToken, async (req, res) => {
             const career = req.body;
             const result = await careearCollection.insertOne(career);
             res.send(result);
         });
 
-        app.patch("/career/:id", verifyToken, async(req, res)=>{
+        app.patch("/career/:id", verifyToken, async (req, res) => {
             const id = req.params.id;
-            const query = {_id: new ObjectId(id)};
+            const query = { _id: new ObjectId(id) };
             const updatedFields = req.body;
 
-            if(!updatedFields || Object.keys(updatedFields).length === 0){
-                return res.status(400).send({message: "nothing to update."});
+            if (!updatedFields || Object.keys(updatedFields).length === 0) {
+                return res.status(400).send({ message: "nothing to update." });
             };
 
-            try{
-                const result = await careearCollection.updateOne(query, {$set: updatedFields});
-                if(result.matchedCount = 0){
-                    return res.status(404).send({message: "career entry not found"});
+            try {
+                const result = await careearCollection.updateOne(query, { $set: updatedFields });
+                if (result.matchedCount = 0) {
+                    return res.status(404).send({ message: "career entry not found" });
                 };
                 return res.send(result);
-            }catch(error){
-                return res.status(500).send({message: "internal error occured"})
+            } catch (error) {
+                return res.status(500).send({ message: "internal error occured" })
             }
         })
 
-        app.get("/career", async(req, res)=>{
-            try{
+        app.get("/career", async (req, res) => {
+            try {
                 const result = await careearCollection.find().toArray();
                 return res.send(result);
-            }catch(error){
-                return res.status(500).send({message: "unable to fetch career data"})
+            } catch (error) {
+                return res.status(500).send({ message: "unable to fetch career data" })
             }
         });
-        
+
 
         //feedback related api's:
         app.get("/feedback", async (req, res) => {
@@ -357,26 +357,39 @@ async function run() {
 
 
         //certification related endpoints:
-        app.post("/certification", verifyToken, upload.single("image"), async (req, res)=>{
-            const {courseTitle, duration, instituteName, topics} = req.body;
-            const uploadResult = await uploadTocloudinary(req.file.buffer);
+        app.post("/certification", verifyToken, upload.single("image"), async (req, res) => {
+            const { courseTitle, duration, instituteName, topics } = req.body;
+
+            let imageURL = "";
+            if(req.file){
+                const uploadResult = await uploadTocloudinary(req.file.buffer);
+                imageURL = uploadResult.secure_url;
+            }
 
             const certificationDoc = {
                 courseTitle,
                 duration: Number(duration) || 0,
                 instituteName,
                 topics: topics ? topics.split(",").map(t => t.trim()).filter(Boolean) : [],
-                image: uploadResult.secure_url,
+                image: imageURL,
                 createdAt: new Date(),
             };
 
-            const result = await certificationCollectio.insertOne(certificationDoc);
-            if(result.insertedId){
+            const result = await certificationCollection.insertOne(certificationDoc);
+            if (result.insertedId) {
                 res.status(200).send(result);
-            }else if(!result.insertedId){
-                return res.status(400).send({message: "something wrong happened."})
+            } else if (!result.insertedId) {
+                return res.status(400).send({ message: "something wrong happened." })
             }
-        })
+        });
+
+        app.get("/certification", async (req, res) => {
+            const result = await certificationCollection.find().toArray();
+            if(!result){
+                return res.status(400).send({messge: "something went wrong!"});
+            };
+            res.status(200).send(result);
+        });
 
 
 
