@@ -37,8 +37,20 @@ const CertificationDrawer = () => {
                     {/* certification cards go here */}
                     {
                         !isLoading && !isError && certification.map((cert) => (
-                            <div key={cert._id} className="">
-                                <h1 className="font-bold text-[#00ea50]">{cert.courseTitle}</h1>
+                            <div key={cert._id} className="md:max-w-7xl mx-auto">
+                                <div className="">
+                                    <h1 className="text-[#00ea50] font-bold text-xl underline">Certifications:</h1>
+                                    <div>
+                                        <h1 className="font-bold text-[#00ea50]">{cert.courseTitle}</h1>
+                                        <h1>{cert.instituteName}</h1>
+                                        <h1>{cert.duration}</h1>
+                                        {
+                                            cert.image && (
+                                                <img src={cert.image} alt={cert.courseTitle} />
+                                            )
+                                        }
+                                    </div>
+                                </div>
                             </div>
                         ))
                     }
