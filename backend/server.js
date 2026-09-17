@@ -68,6 +68,7 @@ async function run() {
         const projectCollection = portfolio.collection("projects");
         const userCollection = portfolio.collection("users");
         const careearCollection = portfolio.collection("career");
+        const certificationCollectio = portfolio.collection("/certification");
 
 
         //auth related api's:
@@ -353,6 +354,29 @@ async function run() {
                 return res.status(500).send({ message: "unable to post feedback right now." });
             };
         });
+
+
+        //certification related endpoints:
+        app.post("/certification", verifyToken, upload.single("image"), async (req, res)=>{
+            const {courseTitle, duration, instituteName, topics} = req.body;
+            const uploadResult = await uploadTocloudinary(req.file.buffer);
+
+            const certificationDoc = {
+                courseTitle,
+                duration: Number(duration) || 0,
+                instituteName,
+                topics: topics ? topics.split(",").map(t => t.trim()).filter(Boolean) : [],
+                image: uploadResult.secure_url,
+                createdAt: new Date(),
+            };
+
+            const result = await certificationCollectio.insertOne(certificationDoc);
+            if(result.insertedId){
+                res.status(200).send(result);
+            }else if(!result.insertedId){
+                return res.status(400).send({message: "something wrong happened."})
+            }
+        })
 
 
 

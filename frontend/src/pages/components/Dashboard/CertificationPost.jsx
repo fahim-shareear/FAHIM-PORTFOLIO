@@ -1,13 +1,47 @@
 import { useForm } from "react-hook-form";
+import useAxios from "../../../axios/useAxios";
+import Swal from "sweetalert2"
 
 
 const CertificationPost = () => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const axiosSecure = useAxios();
 
 
     const handleFormSubmit = (data) => {
+        const formData = new FormData();
+        formData.append("courseTitle", data.courseTitle);
+        formData.append("duration", data.duration);
+        formData.append("instituteName", data.instituteName);
+        formData.append("topics", data.topics);
+        formData.append("image", data.image[0]);
 
-    }
+        // console.log([...formData.entries()]);
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, post it!"
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                axiosSecure.post("/certification", formData)
+                    .then(res => {
+                        if (res.data.insertedId) {
+                            Swal.fire({
+                                title: "Posted!",
+                                text: "Your entry has been posted.",
+                                icon: "success"
+                            });
+                            reset();
+                        }
+                    })
+            }
+        });
+    };
 
     return (
         <div className="">
@@ -20,17 +54,17 @@ const CertificationPost = () => {
                         <div className="grid grid-cols-3 gap-5">
                             <div className="flex flex-col gap-3">
                                 <label className="label font-bold text-xl text-white">Course Name:</label>
-                                <input type="text" className="input bg-white/5 border-0 border-b border-[#00EA50]" placeholder="Course Name" {...register("courseTitle", {required: true})} />
+                                <input type="text" className="input bg-white/5 border-0 border-b border-[#00EA50]" placeholder="Course Name" {...register("courseTitle", { required: true })} />
                                 {errors.courseTitle && <p className="font-bold text-sm text-[#00ea50]">Please enter the coure title</p>}
                             </div>
                             <div className="flex flex-col gap-3">
                                 <label className="label font-bold text-xl text-white">Duration:</label>
-                                <input type="number" className="input bg-white/5 border-0 border-b border-[#00EA50]" placeholder="months" {...register("duration", {required: true})} />
+                                <input type="number" className="input bg-white/5 border-0 border-b border-[#00EA50]" placeholder="months" {...register("duration", { required: true })} />
                                 {errors.duration && <p className="font-bold text-sm text-[#00ea50]">Please enter the course period</p>}
                             </div>
                             <div className="flex flex-col gap-3">
                                 <label className="label font-bold text-xl text-white">Institutions Name:</label>
-                                <input type="text" className="input bg-white/5 border-0 border-b border-[#00EA50]" placeholder="Institutions Name" {...register("instituteName", {required: true})} />
+                                <input type="text" className="input bg-white/5 border-0 border-b border-[#00EA50]" placeholder="Institutions Name" {...register("instituteName", { required: true })} />
                                 {errors.instituteName && <p className="font-bold text-sm text-[#00EA50]">Please enter the Institutions name</p>}
                             </div>
                             <div className="flex flex-col gap-3">
