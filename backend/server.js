@@ -68,7 +68,7 @@ async function run() {
         const projectCollection = portfolio.collection("projects");
         const userCollection = portfolio.collection("users");
         const careearCollection = portfolio.collection("career");
-        const certificationCollectio = portfolio.collection("/certification");
+        const certificationCollectio = portfolio.collection("certification");
 
 
         //auth related api's:
