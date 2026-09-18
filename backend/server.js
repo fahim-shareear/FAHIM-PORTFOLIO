@@ -391,6 +391,33 @@ async function run() {
             res.status(200).send(result);
         });
 
+        //career related api:
+        app.post("/career", verifyToken, async(req, res)=>{
+            const {companyName, position, duration, address} = req.body;
+
+            const careerDoc = {
+                companyName,
+                position,
+                duration,
+                address,
+            };
+
+            const result = await careearCollection.insertOne(careerDoc);
+            if(result.insertedId){
+                return res.status(200).send(result);
+            }else if(!result.insertedId){
+                return res.status(400).send({message: "something went wrong!"})
+            };
+        });
+
+        app.get("/career", async(req, res)=>{
+            const result = await careearCollection.find().toArray();
+            if(!result){
+                return res.status(400).send({message: "something went wrong!"});
+            };
+            res.status(200).send(result);
+        });
+
 
 
         await client.db("admin").command({ ping: 1 });

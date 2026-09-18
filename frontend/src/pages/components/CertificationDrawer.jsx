@@ -21,6 +21,20 @@ const CertificationDrawer = () => {
         }
     });
 
+
+    const {data: career = []} = useQuery({
+        queryKey: ["my-career"],
+        queryFn: async () =>{
+            try{
+                const res = await axiosSecure.get("/career");
+                return res.data;
+            }catch(error){
+                if(error.response?.stauts === 400) return [];
+                throw error;
+            }
+        }
+    })
+
     return (
         <>
             <div
@@ -71,6 +85,19 @@ const CertificationDrawer = () => {
                                             ))}
                                         </div>
                                     )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="md:max-w-7xl mx-auto mt-10">
+                        <h1 className="font-bold text-xl text-[#00ea50] underline">Career:</h1>
+                        <div className="grid md:grid-cols-3 grid-cols-1 gap-5 p-2">
+                            {!isLoading && !isError && career.map((car) => (
+                                <div key={car._id} className="group flex flex-col gap-4 border border-[#00ea50]/40 rounded-xl p-4 bg-white/5 backdrop-blur-sm hover:border-[#00ea50]">
+                                    <h1>{car.companyName}</h1>
+                                    <h1>{car.position}</h1>
+                                    <h1>{car.duration}</h1>
+                                    <h1>{car.address}</h1>
                                 </div>
                             ))}
                         </div>

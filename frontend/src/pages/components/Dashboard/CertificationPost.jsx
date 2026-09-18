@@ -45,6 +45,14 @@ const CertificationPost = () => {
         });
     };
 
+    const handleCareerFormSubmit = (data) =>{
+        const formData = new FormData();
+        formData.append("companyName", data.companyName);
+        formData.append("position", data.position);
+        formData.append("duration", data.duration);
+        formData.append("address", data.address);
+    }
+
     return (
         <div className="">
             <div className="p-4">
@@ -82,6 +90,17 @@ const CertificationPost = () => {
                         <button className="btn bg-white/4 border-[#00ea50] cursor-pointer mt-4">Submit</button>
                     </fieldset>
                 </form>
+            </div>
+
+            <div className="mt-10">
+                <h1 className="font-bold text-xl text-[#00ea50]">Post Career:</h1>
+                <div className="md:max-7xl mx-auto">
+                    <form onSubmit={handleSubmit(handleCareerFormSubmit)}>
+                        <fieldset>
+                                
+                        </fieldset>
+                    </form>
+                </div>
             </div>
         </div>
     );
