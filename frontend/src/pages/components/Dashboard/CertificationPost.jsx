@@ -56,7 +56,7 @@ const CertificationPost = () => {
     return (
         <div className="">
             <div className="p-4">
-                <h1 className="font-bold text-xl">Post Certifications:</h1>
+                <h1 className="font-bold text-2xl text-[#00ea50]">Post Certifications:</h1>
             </div>
             <div className="md:max-w-7xl mx-auto">
                 <form onSubmit={handleSubmit(handleFormSubmit)}>
@@ -93,11 +93,11 @@ const CertificationPost = () => {
             </div>
 
             <div className="mt-10">
-                <h1 className="font-bold text-xl text-[#00ea50]">Post Career:</h1>
+                <h1 className="font-bold text-2xl text-[#00ea50] p-4">Post Career:</h1>
                 <div className="md:max-7xl mx-auto">
                     <form onSubmit={handleSubmit(handleCareerFormSubmit)}>
                         <fieldset>
-                                
+
                         </fieldset>
                     </form>
                 </div>
