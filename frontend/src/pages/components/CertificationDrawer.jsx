@@ -1,9 +1,25 @@
 import { IoMdCloseCircle } from "react-icons/io";
 import useCertification from "../../authcontext/hooks/useCertification";
 import "../../all-css/certification.css";
+import useAxios from "../../axios/useAxios";
+import { useQuery } from "@tanstack/react-query";
 
 const CertificationDrawer = () => {
     const { isCertOpen, closeCertifcationDrawer } = useCertification();
+    const axiosSecure = useAxios();
+
+    const { data: certifications = [], isLoading, isError } = useQuery({
+        queryKey: ["my-certification"],
+        queryFn: async () => {
+            try {
+                const res = await axiosSecure.get("/certification");
+                return res.data;
+            } catch (error) {
+                if (error.response?.status === 400) return [];
+                throw error;
+            }
+        }
+    });
 
     return (
         <>
@@ -16,8 +32,49 @@ const CertificationDrawer = () => {
                     <IoMdCloseCircle className="icons" />
                 </button>
                 <div className="cert-content">
-                    {/* certification cards go here */}
-                    
+                    <div className="md:max-w-7xl mx-auto">
+                        <h1 className="font-bold text-xl text-[#00ea50] underline p-2">Certifications:</h1>
+
+                        <div className="grid md:grid-cols-3 grid-cols-1 gap-5 p-2">
+                            {!isLoading && !isError && certifications.map((cert) => (
+                                <div
+                                    key={cert._id}
+                                    className="group flex flex-col gap-3 border border-[#00ea50]/40 rounded-xl p-4 bg-white/5 backdrop-blur-sm hover:border-[#00ea50] hover:shadow-[0_0_20px_rgba(0,234,80,0.35)] transition-all duration-300"
+                                >
+                                    <div className="w-full aspect-video rounded-lg overflow-hidden bg-black/40">
+                                        {cert.image ? (
+                                            <img
+                                                src={cert.image}
+                                                alt={cert.courseTitle}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-[#00ea50]/40 text-xs">
+                                                No image
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <h1 className="font-bold text-base text-[#00ea50]">{cert.courseTitle}</h1>
+                                    <p className="text-sm text-white/70">{cert.instituteName}</p>
+                                    <p className="text-xs text-[#00ea50] opacity-40">{cert.duration} months</p>
+
+                                    {cert.topics?.length > 0 && (
+                                        <div className="flex flex-wrap gap-2 mt-1">
+                                            {cert.topics.map((topic, idx) => (
+                                                <span
+                                                    key={idx}
+                                                    className="text-xs px-2 py-1 rounded-full border border-[#00ea50]/50 text-[#00ea50] bg-[#00ea50]/5"
+                                                >
+                                                    {topic}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </>
