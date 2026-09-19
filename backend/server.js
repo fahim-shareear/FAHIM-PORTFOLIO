@@ -393,13 +393,14 @@ async function run() {
 
         //career related api:
         app.post("/career", verifyToken, async(req, res)=>{
-            const {companyName, position, duration, address} = req.body;
+            const {companyName, position, duration, address, responsibilities} = req.body;
 
             const careerDoc = {
                 companyName,
                 position,
                 duration,
                 address,
+                responsibilities,
             };
 
             const result = await careearCollection.insertOne(careerDoc);

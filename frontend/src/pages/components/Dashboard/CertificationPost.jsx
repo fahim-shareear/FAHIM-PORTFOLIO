@@ -52,6 +52,7 @@ const CertificationPost = () => {
         formData.append("position", data.position);
         formData.append("duration", data.duration);
         formData.append("address", data.address);
+        formData.append("responsibilities", data.responsibilities);
 
         Swal.fire({
             title: "Are you sure?",
@@ -141,6 +142,11 @@ const CertificationPost = () => {
                                     <input type="text" className="input w-full bg-white/5 border-0 border-b border-[#00ea50]" placeholder="Address" {...registerCareer("address", {required: true})} />
                                     {careerErrors.address && <p className="font-bold text-sm text-[#00ea50]">Please input your office address</p>}
                                 </div>
+                            </div>
+                            <div className="flex flex-col gap-3 justify-center mt-4 w-xl mx-auto">
+                                <label className="label font-bold text-[15px]">Responsibilities:</label>
+                                <textarea className="textarea bg-white/5 border-0 w-full border-b border-[#00ea50]" {...registerCareer("responsibilities", {required: true})}></textarea>
+                                {careerErrors.responsibilities && <p className="font-bold text-sm text-[#00ea50]">Please what your job responsibility is</p>}
                             </div>
                             <div className="flex justify-center mt-6">
                                 <button className="text-xl font-bold text-[#00ea50] rounded-md bg-white/5 border border-[#00ea50] cursor-pointer w-50 p-2">Submit</button>
