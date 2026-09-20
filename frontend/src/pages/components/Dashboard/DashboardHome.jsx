@@ -92,39 +92,57 @@ const DashboardHome = () => {
 
         axiosSecure.patch(`/certification/${selectedCert._id}`, formData)
             .then((res) => {
-                Swal.fire({ title: "Updated!", text: res.data.message, icon: "success" });
-                queryClient.invalidateQueries(["certifications"]);
-                closeCertModal();
+                Swal.fire({
+                    title: "Updated!",
+                    text: res.data.message,
+                    icon: "success",
+                    target: "#edit_cert_modal",
+                }).then(() => closeCertModal());
             })
             .catch((error) => {
                 Swal.fire({
                     title: "Error",
                     text: error.response?.data?.message || "Unable to update certification.",
                     icon: "error",
+                    target: "#edit_cert_modal",
                 });
+            })
+            .finally(() => {
+                queryClient.invalidateQueries(["certifications"]);
             });
     };
 
     const handleDeleteCert = () => {
+        // a native <dialog> renders in the browser's "top layer", which sits above
+        // regular fixed-position content no matter the z-index. SweetAlert2's popup
+        // is just a fixed div, so it would be invisible/unclickable behind an open
+        // dialog. Pointing `target` at the dialog makes Swal render as its
+        // descendant instead, so it stays part of the same top layer and is visible.
         Swal.fire({
             title: "Are you sure?",
             text: "This certification will be permanently deleted.",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonText: "Yes, delete it!"
+            confirmButtonText: "Yes, delete it!",
+            target: "#edit_cert_modal",
         }).then((result) => {
             if (result.isConfirmed) {
                 axiosSecure.delete(`/certification/${selectedCert._id}`)
                     .then((res) => {
-                        Swal.fire({ title: "Deleted!", text: res.data.message, icon: "success" });
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: res.data.message,
+                            icon: "success",
+                            target: "#edit_cert_modal",
+                        }).then(() => closeCertModal());
                         queryClient.invalidateQueries(["certifications"]);
-                        closeCertModal();
                     })
                     .catch((error) => {
                         Swal.fire({
                             title: "Error",
                             text: error.response?.data?.message || "Unable to delete certification.",
                             icon: "error",
+                            target: "#edit_cert_modal",
                         });
                     });
             }
@@ -146,39 +164,54 @@ const DashboardHome = () => {
     const onUpdateCareer = (data) => {
         axiosSecure.patch(`/career/${selectedCareer._id}`, data)
             .then((res) => {
-                Swal.fire({ title: "Updated!", text: res.data.message, icon: "success" });
-                queryClient.invalidateQueries(["career"]);
-                closeCareerModal();
+                Swal.fire({
+                    title: "Updated!",
+                    text: res.data.message,
+                    icon: "success",
+                    target: "#edit_career_modal",
+                }).then(() => closeCareerModal());
             })
             .catch((error) => {
                 Swal.fire({
                     title: "Error",
                     text: error.response?.data?.message || "Unable to update career entry.",
                     icon: "error",
+                    target: "#edit_career_modal",
                 });
+            })
+            .finally(() => {
+                queryClient.invalidateQueries(["career"]);
             });
     };
 
     const handleDeleteCareer = () => {
+        // same native <dialog> top-layer issue as certification delete — render
+        // Swal inside the open dialog instead of closing it first
         Swal.fire({
             title: "Are you sure?",
             text: "This career entry will be permanently deleted.",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonText: "Yes, delete it!"
+            confirmButtonText: "Yes, delete it!",
+            target: "#edit_career_modal",
         }).then((result) => {
             if (result.isConfirmed) {
                 axiosSecure.delete(`/career/${selectedCareer._id}`)
                     .then((res) => {
-                        Swal.fire({ title: "Deleted!", text: res.data.message, icon: "success" });
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: res.data.message,
+                            icon: "success",
+                            target: "#edit_career_modal",
+                        }).then(() => closeCareerModal());
                         queryClient.invalidateQueries(["career"]);
-                        closeCareerModal();
                     })
                     .catch((error) => {
                         Swal.fire({
                             title: "Error",
                             text: error.response?.data?.message || "Unable to delete career entry.",
                             icon: "error",
+                            target: "#edit_career_modal",
                         });
                     });
             }
