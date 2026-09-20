@@ -1,12 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { useContext, useEffect, useState } from "react";
 import useAxios from "../../../axios/useAxios";
-import { useContext } from "react";
 import { Authcontext } from "../../../authcontext/Authcontxt";
+import Swal from "sweetalert2";
 
 
 const DashboardHome = () => {
     const axiosSecure = useAxios();
+    const queryClient = useQueryClient();
     const { loading } = useContext(Authcontext);
+
+    // which post is currently open in each modal (null = none)
+    const [selectedCert, setSelectedCert] = useState(null);
+    const [selectedCareer, setSelectedCareer] = useState(null);
+
+    const certForm = useForm();
+    const careerForm = useForm();
 
     const { data: certifications = [] } = useQuery({
         queryKey: ['certifications'],
@@ -32,6 +42,148 @@ const DashboardHome = () => {
             };
         }
     });
+
+    // whenever a different certification is selected, refill the form with its data
+    useEffect(() => {
+        if (selectedCert) {
+            certForm.reset({
+                courseTitle: selectedCert.courseTitle,
+                duration: selectedCert.duration,
+                instituteName: selectedCert.instituteName,
+                topics: selectedCert.topics?.join(", "),
+            });
+        }
+    }, [selectedCert, certForm]);
+
+    // whenever a different career entry is selected, refill that form too
+    useEffect(() => {
+        if (selectedCareer) {
+            careerForm.reset({
+                companyName: selectedCareer.companyName,
+                position: selectedCareer.position,
+                duration: selectedCareer.duration,
+                address: selectedCareer.address,
+                responsibilities: selectedCareer.responsibilities?.join(", "),
+            });
+        }
+    }, [selectedCareer, careerForm]);
+
+    // ---------- certification modal handlers ----------
+
+    const openCertModal = (cert) => {
+        setSelectedCert(cert);
+        document.getElementById('edit_cert_modal').showModal();
+    };
+
+    const closeCertModal = () => {
+        document.getElementById('edit_cert_modal').close();
+        setSelectedCert(null);
+    };
+
+    const onUpdateCert = (data) => {
+        const formData = new FormData();
+        formData.append("courseTitle", data.courseTitle);
+        formData.append("duration", data.duration);
+        formData.append("instituteName", data.instituteName);
+        formData.append("topics", data.topics);
+        if (data.image && data.image[0]) {
+            formData.append("image", data.image[0]);
+        }
+
+        axiosSecure.patch(`/certification/${selectedCert._id}`, formData)
+            .then((res) => {
+                Swal.fire({ title: "Updated!", text: res.data.message, icon: "success" });
+                queryClient.invalidateQueries(["certifications"]);
+                closeCertModal();
+            })
+            .catch((error) => {
+                Swal.fire({
+                    title: "Error",
+                    text: error.response?.data?.message || "Unable to update certification.",
+                    icon: "error",
+                });
+            });
+    };
+
+    const handleDeleteCert = () => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This certification will be permanently deleted.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axiosSecure.delete(`/certification/${selectedCert._id}`)
+                    .then((res) => {
+                        Swal.fire({ title: "Deleted!", text: res.data.message, icon: "success" });
+                        queryClient.invalidateQueries(["certifications"]);
+                        closeCertModal();
+                    })
+                    .catch((error) => {
+                        Swal.fire({
+                            title: "Error",
+                            text: error.response?.data?.message || "Unable to delete certification.",
+                            icon: "error",
+                        });
+                    });
+            }
+        });
+    };
+
+    // ---------- career modal handlers ----------
+
+    const openCareerModal = (car) => {
+        setSelectedCareer(car);
+        document.getElementById('edit_career_modal').showModal();
+    };
+
+    const closeCareerModal = () => {
+        document.getElementById('edit_career_modal').close();
+        setSelectedCareer(null);
+    };
+
+    const onUpdateCareer = (data) => {
+        axiosSecure.patch(`/career/${selectedCareer._id}`, data)
+            .then((res) => {
+                Swal.fire({ title: "Updated!", text: res.data.message, icon: "success" });
+                queryClient.invalidateQueries(["career"]);
+                closeCareerModal();
+            })
+            .catch((error) => {
+                Swal.fire({
+                    title: "Error",
+                    text: error.response?.data?.message || "Unable to update career entry.",
+                    icon: "error",
+                });
+            });
+    };
+
+    const handleDeleteCareer = () => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This career entry will be permanently deleted.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axiosSecure.delete(`/career/${selectedCareer._id}`)
+                    .then((res) => {
+                        Swal.fire({ title: "Deleted!", text: res.data.message, icon: "success" });
+                        queryClient.invalidateQueries(["career"]);
+                        closeCareerModal();
+                    })
+                    .catch((error) => {
+                        Swal.fire({
+                            title: "Error",
+                            text: error.response?.data?.message || "Unable to delete career entry.",
+                            icon: "error",
+                        });
+                    });
+            }
+        });
+    };
 
     if (loading) return <p className="font-bold text-xl text-[#00ea50] text-center">Loading.........</p>
 
@@ -83,7 +235,12 @@ const DashboardHome = () => {
                                         </div>
                                     )}
                                     <div className="absolute top-0 right-5">
-                                        <button className="font-bold text-[#00ea50] mt-3 border border-[#00ea50] rounded-md p-1 cursor-pointer">Edit</button>
+                                        <button
+                                            onClick={() => openCertModal(cert)}
+                                            className="font-bold text-[#00ea50] mt-3 border border-[#00ea50] rounded-md p-1 cursor-pointer"
+                                        >
+                                            Edit
+                                        </button>
                                     </div>
                                 </div>
                             ))
@@ -120,7 +277,12 @@ const DashboardHome = () => {
                                     }
 
                                     <div className="absolute top-0 right-4">
-                                        <button className="font-bold text-[#00ea50] p-1 border border-[#00ea50] rounded-md mt-2 cursor-pointer">Edit</button>
+                                        <button
+                                            onClick={() => openCareerModal(car)}
+                                            className="font-bold text-[#00ea50] p-1 border border-[#00ea50] rounded-md mt-2 cursor-pointer"
+                                        >
+                                            Edit
+                                        </button>
                                     </div>
                                 </div>
                             ))
@@ -128,6 +290,120 @@ const DashboardHome = () => {
                     </div>
                 </div>
             </div>
+
+            {/* certification edit/delete modal */}
+            <dialog id="edit_cert_modal" className="modal" onClose={() => setSelectedCert(null)}>
+                <div className="modal-box">
+                    {selectedCert && (
+                        <>
+                            <h3 className="font-bold text-lg text-[#00ea50]">Edit Certification</h3>
+
+                            <form onSubmit={certForm.handleSubmit(onUpdateCert)} className="flex flex-col gap-3 mt-4">
+                                <div>
+                                    <label className="text-sm font-bold">Course Name</label>
+                                    <input className="input w-full" {...certForm.register("courseTitle", { required: true })} />
+                                </div>
+
+                                <div>
+                                    <label className="text-sm font-bold">Duration (months)</label>
+                                    <input type="number" className="input w-full" {...certForm.register("duration", { required: true })} />
+                                </div>
+
+                                <div>
+                                    <label className="text-sm font-bold">Institution Name</label>
+                                    <input className="input w-full" {...certForm.register("instituteName", { required: true })} />
+                                </div>
+
+                                <div>
+                                    <label className="text-sm font-bold">Topics (comma separated)</label>
+                                    <textarea className="textarea w-full" {...certForm.register("topics", { required: true })}></textarea>
+                                </div>
+
+                                <div>
+                                    <label className="text-sm font-bold">Replace Image (optional)</label>
+                                    <input type="file" className="w-full" {...certForm.register("image")} />
+                                </div>
+
+                                <div className="flex justify-between mt-4">
+                                    <button type="button" onClick={handleDeleteCert} className="btn btn-error">
+                                        Delete
+                                    </button>
+
+                                    <div className="flex gap-2">
+                                        <button type="button" onClick={closeCertModal} className="btn">
+                                            Cancel
+                                        </button>
+                                        <button type="submit" className="btn btn-success">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </>
+                    )}
+                </div>
+
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
+
+            {/* career edit/delete modal */}
+            <dialog id="edit_career_modal" className="modal" onClose={() => setSelectedCareer(null)}>
+                <div className="modal-box">
+                    {selectedCareer && (
+                        <>
+                            <h3 className="font-bold text-lg text-[#00ea50]">Edit Career Entry</h3>
+
+                            <form onSubmit={careerForm.handleSubmit(onUpdateCareer)} className="flex flex-col gap-3 mt-4">
+                                <div>
+                                    <label className="text-sm font-bold">Company Name</label>
+                                    <input className="input w-full" {...careerForm.register("companyName", { required: true })} />
+                                </div>
+
+                                <div>
+                                    <label className="text-sm font-bold">Designation</label>
+                                    <input className="input w-full" {...careerForm.register("position", { required: true })} />
+                                </div>
+
+                                <div>
+                                    <label className="text-sm font-bold">Duration</label>
+                                    <input className="input w-full" {...careerForm.register("duration", { required: true })} />
+                                </div>
+
+                                <div>
+                                    <label className="text-sm font-bold">Address</label>
+                                    <input className="input w-full" {...careerForm.register("address", { required: true })} />
+                                </div>
+
+                                <div>
+                                    <label className="text-sm font-bold">Responsibilities (comma separated)</label>
+                                    <textarea className="textarea w-full" {...careerForm.register("responsibilities", { required: true })}></textarea>
+                                </div>
+
+                                <div className="flex justify-between mt-4">
+                                    <button type="button" onClick={handleDeleteCareer} className="btn btn-error">
+                                        Delete
+                                    </button>
+
+                                    <div className="flex gap-2">
+                                        <button type="button" onClick={closeCareerModal} className="btn">
+                                            Cancel
+                                        </button>
+                                        <button type="submit" className="btn btn-success">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </>
+                    )}
+                </div>
+
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
         </div>
     );
 };

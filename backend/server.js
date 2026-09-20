@@ -266,6 +266,11 @@ async function run() {
             { name: "screenshots", maxCount: 5 },
         ]), async (req, res) => {
             const id = req.params.id;
+
+            if (!ObjectId.isValid(id)) {
+                return res.status(400).send({ message: "invalid project id" });
+            };
+
             const query = { _id: new ObjectId(id) };
 
             const updatedFields = {};
@@ -308,6 +313,11 @@ async function run() {
         //project info deleting api:
         app.delete("/projects/:id", verifyToken, async (req, res) => {
             const id = req.params.id;
+
+            if (!ObjectId.isValid(id)) {
+                return res.status(400).send({ message: "invalid project id" });
+            };
+
             const query = { _id: new ObjectId(id) };
             try {
                 const result = await projectCollection.deleteOne(query);
@@ -323,6 +333,11 @@ async function run() {
         //career & course related api:
         app.post("/career", verifyToken, upload.none(), async (req, res) => {
             const { companyName, position, duration, address, responsibilities } = req.body;
+
+            if (!companyName || !position || !duration || !address) {
+                return res.status(400).send({ message: "company name, position, duration and address are required" });
+            };
+
             const careerDoc = {
                 companyName,
                 position,
@@ -332,14 +347,21 @@ async function run() {
                 createdAt: new Date(),
             };
 
-            if (!careerDoc) return res.status(400).send({ message: "no information has been provided" });
-
-            const result = await careearCollection.insertOne(careerDoc);
-            res.send(result);
+            try {
+                const result = await careearCollection.insertOne(careerDoc);
+                res.status(201).send(result);
+            } catch (error) {
+                res.status(500).send({ message: "unable to post career entry" });
+            }
         });
 
         app.patch("/career/:id", verifyToken, upload.none(), async (req, res) => {
             const id = req.params.id;
+
+            if (!ObjectId.isValid(id)) {
+                return res.status(400).send({ message: "invalid career entry id" });
+            };
+
             const query = { _id: new ObjectId(id) };
             const updatedFields = { ...req.body };
 
@@ -356,23 +378,30 @@ async function run() {
                 if (result.matchedCount === 0) {
                     return res.status(404).send({ message: "career entry not found" });
                 };
-                return res.send(result);
+                return res.status(200).send({ message: "career entry updated", ...updatedFields });
             } catch (error) {
-                return res.status(500).send({ message: "internal error occured" })
+                return res.status(500).send({ message: "unable to update career entry" })
             }
         });
 
-        app.delete("/career/:id", verifyToken, async(req, res)=>{
+        app.delete("/career/:id", verifyToken, async (req, res) => {
             const id = req.params.id;
-            const query = {_id: new ObjectId(id)};
 
-            const result = await careearCollection.deleteOne(query);
-            if(result.deletedCount === 0){
-                return res.status(404).send({message: "career entry not found!"})
+            if (!ObjectId.isValid(id)) {
+                return res.status(400).send({ message: "invalid career entry id" });
             };
-            if(result.deletedCount === 1){
-                return res.status(200).send({message: "career entry has been successfully deleted"});
-            };
+
+            const query = { _id: new ObjectId(id) };
+
+            try {
+                const result = await careearCollection.deleteOne(query);
+                if (result.deletedCount === 0) {
+                    return res.status(404).send({ message: "career entry not found" });
+                };
+                return res.status(200).send({ message: "career entry has been successfully deleted" });
+            } catch (error) {
+                return res.status(500).send({ message: "unable to delete career entry" });
+            }
         });
 
         app.get("/career", async (req, res) => {
@@ -407,86 +436,130 @@ async function run() {
         app.post("/certification", verifyToken, upload.single("image"), async (req, res) => {
             const { courseTitle, duration, instituteName, topics } = req.body;
 
-            let imageURL = "";
-            if (req.file) {
-                const uploadResult = await uploadTocloudinary(req.file.buffer);
-                imageURL = uploadResult.secure_url;
-            }
-
-            const certificationDoc = {
-                courseTitle,
-                duration: Number(duration) || 0,
-                instituteName,
-                topics: topics ? topics.split(",").map(t => t.trim()).filter(Boolean) : [],
-                image: imageURL,
-                createdAt: new Date(),
+            if (!courseTitle || !instituteName) {
+                return res.status(400).send({ message: "course title and institution name are required" });
             };
 
-            const result = await certificationCollection.insertOne(certificationDoc);
-            if (result.insertedId) {
-                res.status(200).send(result);
-            } else if (!result.insertedId) {
-                return res.status(400).send({ message: "something wrong happened." })
+            try {
+                let imageURL = "";
+                if (req.file) {
+                    const uploadResult = await uploadTocloudinary(req.file.buffer);
+                    imageURL = uploadResult.secure_url;
+                }
+
+                const certificationDoc = {
+                    courseTitle,
+                    duration: Number(duration) || 0,
+                    instituteName,
+                    topics: topics ? topics.split(",").map(t => t.trim()).filter(Boolean) : [],
+                    image: imageURL,
+                    createdAt: new Date(),
+                };
+
+                const result = await certificationCollection.insertOne(certificationDoc);
+                if (!result.insertedId) {
+                    return res.status(400).send({ message: "something wrong happened while posting certification." });
+                };
+                res.status(201).send(result);
+            } catch (error) {
+                res.status(500).send({ message: "unable to post certification, please try again." });
             }
         });
 
         app.patch("/certification/:id", verifyToken, upload.single("image"), async (req, res) => {
             const id = req.params.id;
+
+            if (!ObjectId.isValid(id)) {
+                return res.status(400).send({ message: "invalid certification id" });
+            };
+
             const { courseTitle, duration, instituteName, topics } = req.body;
             const query = { _id: new ObjectId(id) };
 
-            const updatedDoc = {};
-            if (courseTitle) updatedDoc.courseTitle = courseTitle;
-            if (duration) updatedDoc.duration = Number(duration) || 0;
-            if (instituteName) updatedDoc.instituteName = instituteName;
-            if (topics) updatedDoc.topics = topics.split(",").map(t => t.trim()).filter(Boolean);
+            try {
+                const existingCert = await certificationCollection.findOne(query);
+                if (!existingCert) {
+                    return res.status(404).send({ message: "certification post not found" });
+                };
 
-            let imageURL = "";
-            if (req.file) {
-                const uploadResult = await uploadTocloudinary(req.file.buffer);
-                imageURL = uploadResult.secure_url;
-            };
+                const updatedDoc = {};
+                if (courseTitle) updatedDoc.courseTitle = courseTitle;
+                if (duration) updatedDoc.duration = Number(duration) || 0;
+                if (instituteName) updatedDoc.instituteName = instituteName;
+                if (topics) updatedDoc.topics = topics.split(",").map(t => t.trim()).filter(Boolean);
 
-            if (Object.keys(updatedDoc).length === 0) {
-                return res.status(400).send({ message: "nothing to update" });
-            };
+                if (req.file) {
+                    const uploadResult = await uploadTocloudinary(req.file.buffer);
+                    updatedDoc.image = uploadResult.secure_url;
 
-            const result = await certificationCollection.updateOne(query, { $set: updatedDoc });
-            if (result.matchedCount === 0) {
-                return res.status(400).send({ message: "certification post not found" });
-            };
+                    // old image ke cloudinary theke clean up kore fela, orphan file jeno na thake
+                    const oldPublicId = getPublicIdFromUrl(existingCert.image);
+                    if (oldPublicId) {
+                        try {
+                            await cloudinary.uploader.destroy(oldPublicId);
+                        } catch (error) {
+                            console.error("old image cleanup failed:", error.message);
+                        }
+                    }
+                };
 
-            res.send(result);
+                if (Object.keys(updatedDoc).length === 0) {
+                    return res.status(400).send({ message: "nothing to update" });
+                };
+
+                const result = await certificationCollection.updateOne(query, { $set: updatedDoc });
+                if (result.matchedCount === 0) {
+                    return res.status(404).send({ message: "certification post not found" });
+                };
+
+                res.status(200).send({ message: "certification updated", ...updatedDoc });
+            } catch (error) {
+                res.status(500).send({ message: "unable to update certification, please try again." });
+            }
         });
 
-        app.delete("/certification/:id", verifyToken, async(req, res)=>{
+        app.delete("/certification/:id", verifyToken, async (req, res) => {
             const id = req.params.id;
-            const query = {_id: new ObjectId(id)};
 
-            const cert = await certificationCollection.findOne(query);
-            const publicId = getPublicIdFromUrl(cert.image);
-            if(publicId){
-                try{
-                    await cloudinary.uploader.destroy(publicId);
-                }catch(error){
-                    console.error("coludinary delete failed", error.message);
+            if (!ObjectId.isValid(id)) {
+                return res.status(400).send({ message: "invalid certification id" });
+            };
+
+            const query = { _id: new ObjectId(id) };
+
+            try {
+                const cert = await certificationCollection.findOne(query);
+                if (!cert) {
+                    return res.status(404).send({ message: "certification not found" });
                 };
-            };
 
-            const result = await certificationCollection.deleteOne(query);
-            if(result.deletedCount === 0){
-                return res.status(404).send({message: "certification not found"});
-            };
+                const publicId = getPublicIdFromUrl(cert.image);
+                if (publicId) {
+                    try {
+                        await cloudinary.uploader.destroy(publicId);
+                    } catch (error) {
+                        console.error("cloudinary delete failed:", error.message);
+                    };
+                };
 
-            res.status(200).send({message: "certification has been deleted."})
-        })
+                const result = await certificationCollection.deleteOne(query);
+                if (result.deletedCount === 0) {
+                    return res.status(404).send({ message: "certification not found" });
+                };
+
+                res.status(200).send({ message: "certification has been deleted." });
+            } catch (error) {
+                res.status(500).send({ message: "unable to delete certification, please try again." });
+            }
+        });
 
         app.get("/certification", async (req, res) => {
-            const result = await certificationCollection.find().sort({ createdAt: -1 }).toArray();
-            if (!result) {
-                return res.status(400).send({ messge: "something went wrong!" });
-            };
-            res.status(200).send(result);
+            try {
+                const result = await certificationCollection.find().sort({ createdAt: -1 }).toArray();
+                res.status(200).send(result);
+            } catch (error) {
+                res.status(500).send({ message: "unable to fetch certification data" });
+            }
         });
 
 
