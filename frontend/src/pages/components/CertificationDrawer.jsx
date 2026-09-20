@@ -93,11 +93,24 @@ const CertificationDrawer = () => {
                         <h1 className="font-bold text-xl text-[#00ea50] underline">Career:</h1>
                         <div className="grid md:grid-cols-3 grid-cols-1 gap-5 p-2">
                             {!isLoading && !isError && career.map((car) => (
-                                <div key={car._id} className="group flex flex-col gap-4 border border-[#00ea50]/40 rounded-xl p-4 bg-white/5 backdrop-blur-sm hover:border-[#00ea50]">
-                                    <h1>{car.companyName}</h1>
-                                    <h1>{car.position}</h1>
-                                    <h1>{car.duration}</h1>
+                                <div key={car._id} className="group flex flex-col gap-2 border border-[#00ea50]/40 rounded-xl p-4 bg-white/5 backdrop-blur-sm hover:border-[#00ea50]">
+                                    <h1 className="font-bold text-xl text-[#00ea50]">{car.companyName}</h1>
+                                    <h1 className="text-sm">{car.position}</h1>
+                                    <h1 className="text-[#53f900]">{car.duration}</h1>
                                     <h1>{car.address}</h1>
+                                    {
+                                        car.responsibilities?.length > 0 && (
+                                            <div className="flex flex-col gap-2 px-2 py-2">
+                                                {
+                                                    car.responsibilities.map((res, id)=> (
+                                                        <li key={id} className="text-xs px-2 text-[#00ea50]">
+                                                            {res}
+                                                        </li>
+                                                    ))
+                                                }
+                                            </div>
+                                        )
+                                    }
                                 </div>
                             ))}
                         </div>

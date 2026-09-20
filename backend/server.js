@@ -302,16 +302,31 @@ async function run() {
         });
 
         //career & course related api:
-        app.post("/career", verifyToken, async (req, res) => {
-            const career = req.body;
-            const result = await careearCollection.insertOne(career);
+        app.post("/career", verifyToken, upload.none(), async (req, res) => {
+            const {companyName, position, duration, address, responsibilities} = req.body;
+            const careerDoc = {
+                companyName,
+                position,
+                duration,
+                address,
+                responsibilities: responsibilities ? responsibilities.split(",").map(r => r.trim()).filter(Boolean) : [],
+                createdAt: new Date(),
+            };
+
+            if(!careerDoc) return res.status(400).send({message: "no information has been provided"});
+
+            const result = await careearCollection.insertOne(careerDoc);
             res.send(result);
         });
 
-        app.patch("/career/:id", verifyToken, async (req, res) => {
+        app.patch("/career/:id", verifyToken, upload.none(), async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
-            const updatedFields = req.body;
+            const updatedFields = [...req.body];
+
+            if(updatedFields.responsibilities){
+                updatedFields.responsibilities = updatedFields.responsibilities.split(",").map(r => r.trim()).filter(Boolean);
+            };
 
             if (!updatedFields || Object.keys(updatedFields).length === 0) {
                 return res.status(400).send({ message: "nothing to update." });
@@ -319,7 +334,7 @@ async function run() {
 
             try {
                 const result = await careearCollection.updateOne(query, { $set: updatedFields });
-                if (result.matchedCount = 0) {
+                if (result.matchedCount === 0) {
                     return res.status(404).send({ message: "career entry not found" });
                 };
                 return res.send(result);
@@ -330,7 +345,7 @@ async function run() {
 
         app.get("/career", async (req, res) => {
             try {
-                const result = await careearCollection.find().toArray();
+                const result = await careearCollection.find().sort({createdAt: -1}).toArray();
                 return res.send(result);
             } catch (error) {
                 return res.status(500).send({ message: "unable to fetch career data" })
@@ -384,37 +399,9 @@ async function run() {
         });
 
         app.get("/certification", async (req, res) => {
-            const result = await certificationCollection.find().toArray();
+            const result = await certificationCollection.find().sort({createdAt: -1}).toArray();
             if(!result){
                 return res.status(400).send({messge: "something went wrong!"});
-            };
-            res.status(200).send(result);
-        });
-
-        //career related api:
-        app.post("/career", verifyToken, async(req, res)=>{
-            const {companyName, position, duration, address, responsibilities} = req.body;
-
-            const careerDoc = {
-                companyName,
-                position,
-                duration,
-                address,
-                responsibilities,
-            };
-
-            const result = await careearCollection.insertOne(careerDoc);
-            if(result.insertedId){
-                return res.status(200).send(result);
-            }else if(!result.insertedId){
-                return res.status(400).send({message: "something went wrong!"})
-            };
-        });
-
-        app.get("/career", async(req, res)=>{
-            const result = await careearCollection.find().toArray();
-            if(!result){
-                return res.status(400).send({message: "something went wrong!"});
             };
             res.status(200).send(result);
         });

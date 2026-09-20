@@ -58,7 +58,8 @@ const CertificationPost = () => {
             title: "Are you sure?",
             text: "You won't be able to revert this!",
             icon: "warning",
-            showCancelButton: "#d33",
+            showCancelButton: true,
+            confirmButtonColor: "#00ea50",
             confirmButtonText: "Yes, post it!"
         }).then((result) => {
             if (result.isConfirmed) {
@@ -68,12 +69,14 @@ const CertificationPost = () => {
                             Swal.fire({
                                 title: "Posted!",
                                 text: "Your entry has been posted.",
-                                icon: "sucess",
+                                icon: "success",
                             });
                             resetCareer();
                         }
                     })
-            }
+            }else if(result.isDismissed){
+                return resetCareer();
+            };
         });
     };
 
