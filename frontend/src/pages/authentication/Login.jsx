@@ -81,10 +81,6 @@ const Login = () => {
                         </button>
                         {errors.password && <p className="auth-error p-2 capitalize text-sm text-red-500">password is required</p>}
                     </div>
-
-                    <div className="auth-form__meta">
-                        <a className="auth-link">forgot password?</a>
-                    </div>
                     {errors.root && <p className="auth-error text-sm uppercase text-red-500">{errors.root.message}</p>}
                     <button type="submit" className="auth-btn">
                         log in
