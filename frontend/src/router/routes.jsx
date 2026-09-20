@@ -10,6 +10,7 @@ import ProjectsPost from "../pages/components/Dashboard/ProjectsPost";
 import CertificationPost from "../pages/components/Dashboard/CertificationPost";
 import PrivateRouter from "../authcontext/PrivateRouter";
 import ProjectDetails from "../pages/components/ProjectDetails";
+import Profile from "../pages/components/Dashboard/Profile";
 
 const routes = createBrowserRouter([
     {
@@ -32,7 +33,8 @@ const routes = createBrowserRouter([
         children: [
             {index: true, Component: DashboardHome},
             {path: "projects-post", Component: ProjectsPost},
-            {path: "certification-post", Component: CertificationPost}
+            {path: "certification-post", Component: CertificationPost},
+            {path: "profile", Component: Profile}
         ]
     }
 ]);
