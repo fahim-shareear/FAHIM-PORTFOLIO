@@ -22,14 +22,14 @@ const CertificationDrawer = () => {
     });
 
 
-    const {data: career = []} = useQuery({
+    const { data: career = [] } = useQuery({
         queryKey: ["my-career"],
-        queryFn: async () =>{
-            try{
+        queryFn: async () => {
+            try {
                 const res = await axiosSecure.get("/career");
                 return res.data;
-            }catch(error){
-                if(error.response?.stauts === 400) return [];
+            } catch (error) {
+                if (error.response?.stauts === 400) return [];
                 throw error;
             }
         }
@@ -53,8 +53,7 @@ const CertificationDrawer = () => {
                             {!isLoading && !isError && certifications.map((cert) => (
                                 <div
                                     key={cert._id}
-                                    className="group flex flex-col gap-3 border border-[#00ea50]/40 rounded-xl p-4 bg-white/5 backdrop-blur-sm hover:border-[#00ea50] hover:shadow-[0_0_20px_rgba(0,234,80,0.35)] transition-all duration-300"
-                                >
+                                    className="group flex flex-col gap-3 border border-[#00ea50]/40 rounded-xl p-4 bg-white/5 backdrop-blur-sm hover:border-[#00ea50] hover:shadow-[0_0_20px_rgba(0,234,80,0.35)] transition-all duration-300">
                                     <div className="w-full aspect-video rounded-lg overflow-hidden bg-black/40">
                                         {cert.image ? (
                                             <img
@@ -102,7 +101,7 @@ const CertificationDrawer = () => {
                                         car.responsibilities?.length > 0 && (
                                             <div className="flex flex-col gap-2 px-2 py-2">
                                                 {
-                                                    car.responsibilities.map((res, id)=> (
+                                                    car.responsibilities.map((res, id) => (
                                                         <li key={id} className="text-xs px-2 text-[#00ea50]">
                                                             {res}
                                                         </li>
