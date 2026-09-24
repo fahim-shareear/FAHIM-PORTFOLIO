@@ -431,6 +431,20 @@ async function run() {
             };
         });
 
+        app.delete("/feedback/:id", verifyToken, async(req, res)=>{
+            const id = req.params.id;
+            const query = {_id: new ObjectId(id)};
+
+            try{
+                const result = await feedbackCollection.deleteOne(query);
+                res.send(result);
+            }catch(error){
+                if(error){
+                    return res.status(400).send({message: "feedback not found!"})
+                }
+            };
+        });
+
 
         //certification related endpoints:
         app.post("/certification", verifyToken, upload.single("image"), async (req, res) => {
