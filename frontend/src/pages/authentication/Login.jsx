@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 const Login = () => {
     const { logInUser } = useContext(Authcontext);
     const navigate = useNavigate();
-    const { register, handleSubmit, setError, formState: { errors }, } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const [eye, setEye] = useState(false);
 
     const handleEye = (e) => {
@@ -32,9 +32,21 @@ const Login = () => {
                         fontSize: "18px",
                     }
                 })
-            }).catch(()=>{
-                setError("root", {message: "invalid email or password"});
-            })
+            }).catch((error)=>{
+                const errorMessageResponse = error?.response?.data?.message;
+                const message = errorMessageResponse;
+                toast.error(message, {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    style:{
+                        background: "#ea0000",
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: "18px",
+                    }
+                });
+                reset();
+            });
     };
 
     return (
@@ -81,7 +93,6 @@ const Login = () => {
                         </button>
                         {errors.password && <p className="auth-error p-2 capitalize text-sm text-red-500">password is required</p>}
                     </div>
-                    {errors.root && <p className="auth-error text-sm uppercase text-red-500">{errors.root.message}</p>}
                     <button type="submit" className="auth-btn">
                         log in
                     </button>
