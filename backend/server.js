@@ -9,12 +9,13 @@ const cookieParser = require('cookie-parser');
 const verifyToken = require('./components/authmiddleware/verifyToken');
 const cloudinary = require('cloudinary').v2;
 const port = process.env.PORT || 3000;
-
+const {loginLimiter, changePasswordLimiter, feedbackLimiter, otherLimiters,} = require("./components/authmiddleware/ratelimiters");
 
 
 
 //middlewares:
 const app = express();
+app.set("trust proxy", 1);
 app.use(cors({
     origin: process.env.CLIENT_URL,
     credentials: true,
@@ -91,7 +92,7 @@ async function run() {
 
 
         //auth related api's:
-        app.post("/login", async (req, res) => {
+        app.post("/login", loginLimiter, async (req, res) => {
             const { email, password } = req.body;
 
             if (!email || !password) {
@@ -178,7 +179,7 @@ async function run() {
         })
 
         //password update related api:
-        app.patch("/change-password", verifyToken, async (req, res) => {
+        app.patch("/change-password",  verifyToken, changePasswordLimiter, async (req, res) => {
             const { currentPassword, newPassword } = req.body;
 
             if (!currentPassword || !newPassword) {
@@ -224,7 +225,7 @@ async function run() {
         });
 
         //project posting api:
-        app.post("/projects", verifyToken, upload.fields([
+        app.post("/projects", verifyToken, otherLimiters, upload.fields([
             { name: "image", maxCount: 1 },
             { name: "screenshots", maxCount: 5 },
         ]), async (req, res) => {
@@ -261,7 +262,7 @@ async function run() {
         })
 
         //project updating api:
-        app.patch("/projects/:id", verifyToken, upload.fields([
+        app.patch("/projects/:id", verifyToken, otherLimiters, upload.fields([
             { name: "image", maxCount: 1 },
             { name: "screenshots", maxCount: 5 },
         ]), async (req, res) => {
@@ -311,7 +312,7 @@ async function run() {
         });
 
         //project info deleting api:
-        app.delete("/projects/:id", verifyToken, async (req, res) => {
+        app.delete("/projects/:id", verifyToken, otherLimiters, async (req, res) => {
             const id = req.params.id;
 
             if (!ObjectId.isValid(id)) {
@@ -331,7 +332,7 @@ async function run() {
         });
 
         //career & course related api:
-        app.post("/career", verifyToken, upload.none(), async (req, res) => {
+        app.post("/career", verifyToken, otherLimiters, upload.none(), async (req, res) => {
             const { companyName, position, duration, address, responsibilities } = req.body;
 
             if (!companyName || !position || !duration || !address) {
@@ -355,7 +356,7 @@ async function run() {
             }
         });
 
-        app.patch("/career/:id", verifyToken, upload.none(), async (req, res) => {
+        app.patch("/career/:id", verifyToken, otherLimiters, upload.none(), async (req, res) => {
             const id = req.params.id;
 
             if (!ObjectId.isValid(id)) {
@@ -384,7 +385,7 @@ async function run() {
             }
         });
 
-        app.delete("/career/:id", verifyToken, async (req, res) => {
+        app.delete("/career/:id", verifyToken, otherLimiters, async (req, res) => {
             const id = req.params.id;
 
             if (!ObjectId.isValid(id)) {
@@ -421,7 +422,7 @@ async function run() {
         });
 
         //feedback posting api:
-        app.post("/feedback", async (req, res) => {
+        app.post("/feedback", feedbackLimiter, async (req, res) => {
             const feedBack = req.body;
             try {
                 const result = await feedbackCollection.insertOne(feedBack);
@@ -431,7 +432,7 @@ async function run() {
             };
         });
 
-        app.delete("/feedback/:id", verifyToken, async(req, res)=>{
+        app.delete("/feedback/:id", verifyToken, otherLimiters, async(req, res)=>{
             const id = req.params.id;
             const query = {_id: new ObjectId(id)};
 
@@ -447,7 +448,7 @@ async function run() {
 
 
         //certification related endpoints:
-        app.post("/certification", verifyToken, upload.single("image"), async (req, res) => {
+        app.post("/certification", verifyToken, otherLimiters, upload.single("image"), async (req, res) => {
             const { courseTitle, duration, instituteName, topics } = req.body;
 
             if (!courseTitle || !instituteName) {
@@ -480,7 +481,7 @@ async function run() {
             }
         });
 
-        app.patch("/certification/:id", verifyToken, upload.single("image"), async (req, res) => {
+        app.patch("/certification/:id", verifyToken, otherLimiters, upload.single("image"), async (req, res) => {
             const id = req.params.id;
 
             if (!ObjectId.isValid(id)) {
@@ -532,7 +533,7 @@ async function run() {
             }
         });
 
-        app.delete("/certification/:id", verifyToken, async (req, res) => {
+        app.delete("/certification/:id", verifyToken, otherLimiters, async (req, res) => {
             const id = req.params.id;
 
             if (!ObjectId.isValid(id)) {
