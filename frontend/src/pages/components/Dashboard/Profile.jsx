@@ -1,14 +1,20 @@
 import { useContext } from "react";
+import { useNavigate } from "react-router";
 import { Authcontext } from "../../../authcontext/Authcontxt";
 import "../../../all-css/profile.css";
 
 
 const Profile = () => {
     const { user, logOutUser } = useContext(Authcontext);
+    const navigate = useNavigate();
 
-    const useSignOut = () =>{
+    const useSignOut = () => {
         logOutUser();
     };
+
+    const hadnleNavigate = () => {
+        navigate("/dashboard/change-password")
+    }
 
 
     return (
@@ -20,11 +26,11 @@ const Profile = () => {
                         <h1>{user.email}</h1>
                     </div>
                     <div>
-                        <button onClick={useSignOut} className="signOutButton">Sign Out</button>
+                        <button onClick={useSignOut} className="signOutButton font-bold">Sign Out</button>
                     </div>
                 </div>
                 <div className="password p-3">
-                    <button>Change Password</button>
+                    <button onClick={hadnleNavigate} className="c-change">Change Password</button>
                 </div>
             </div>
         </div>

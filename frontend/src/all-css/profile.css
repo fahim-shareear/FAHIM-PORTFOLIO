@@ -21,4 +21,22 @@
 
 .signOutButton{
     cursor: pointer;
+    border: 1px solid #00ea50;
+    border-radius: 20px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-style: bold;
+    color: #00ea50;
+}
+
+.password button{
+    cursor: pointer;
+}
+
+.c-change{
+    font-style: bold;
+    border: 1px solid #00ea50;
+    border-radius: 20px;
+    padding: 0.5rem;
+    color: #00ea50;
 }
