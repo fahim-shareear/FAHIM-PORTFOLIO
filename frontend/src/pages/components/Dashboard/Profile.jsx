@@ -14,11 +14,15 @@ const Profile = () => {
 
     const hadnleNavigate = () => {
         navigate("/dashboard/change-password")
+    };
+
+    const updateProfile = () => {
+        navigate("/dashboard/update-profile")
     }
 
 
     return (
-        <div className="w-full z-10 main-container">
+        <div className="w-full z-10 main-container relative border-2 border-red-500">
             <div className="border-[#00ea50] rounded-xl shadow-md profile-container">
                 <div className="md:max-w-7xl mx-auto profile-top">
                     <img src={user.image} alt={user.name} className="w-30 h-30 rounded-full border border-[#00ea50]" />
@@ -31,6 +35,9 @@ const Profile = () => {
                 </div>
                 <div className="password p-3">
                     <button onClick={hadnleNavigate} className="c-change">Change Password</button>
+                </div>
+                <div className="p-3">
+                    <button onClick={updateProfile} className="border border-[#00ea50] rounded-xl p-2 text-[#00ea50] font-bold">Update Profile</button>
                 </div>
             </div>
         </div>
