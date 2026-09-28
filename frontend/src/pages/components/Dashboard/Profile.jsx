@@ -27,7 +27,10 @@ const Profile = () => {
                 <div className="md:max-w-7xl mx-auto profile-top">
                     <img src={user.image} alt={user.name} className="w-30 h-30 rounded-full border border-[#00ea50]" />
                     <div>
-                        <h1>{user.email}</h1>
+                        <h1 className="font-bold text-xl text-[#00ea50]">{user.name}</h1>
+                    </div>
+                    <div>
+                        <h1 className="font-bold text-xl text-[#00ea50]">{user.email}</h1>
                     </div>
                     <div>
                         <button onClick={useSignOut} className="signOutButton font-bold">Sign Out</button>
