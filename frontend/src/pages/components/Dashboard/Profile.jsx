@@ -40,7 +40,7 @@ const Profile = () => {
                     <button onClick={hadnleNavigate} className="c-change">Change Password</button>
                 </div>
                 <div className="p-3">
-                    <button onClick={updateProfile} className="border border-[#00ea50] rounded-xl p-2 text-[#00ea50] font-bold">Update Profile</button>
+                    <button onClick={updateProfile} className="border cursor-pointer border-[#00ea50] rounded-xl p-2 text-[#00ea50] font-bold">Update Profile</button>
                 </div>
             </div>
         </div>
