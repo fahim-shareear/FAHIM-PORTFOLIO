@@ -22,7 +22,7 @@ const Profile = () => {
 
 
     return (
-        <div className="w-full z-10 main-container relative border-2 border-red-500">
+        <div className="w-full z-10 main-container relative">
             <div className="border-[#00ea50] rounded-xl shadow-md profile-container">
                 <div className="md:max-w-7xl mx-auto profile-top">
                     <img src={user.image} alt={user.name} className="w-30 h-30 rounded-full border border-[#00ea50]" />
