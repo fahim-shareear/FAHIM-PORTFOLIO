@@ -125,7 +125,7 @@ const Feedback = () => {
                                 bg-white/5 
                                 uppercase 
                                 border 
-                                border-[#00EA50]
+                                border-[#00E5A0]
                                 hover:bg-[#00ea5276]
                                 hover:text-white
                                 transition-all
@@ -143,28 +143,28 @@ const Feedback = () => {
 
             {/* sliding panel - always mounted, transform-driven */}
             <div
-                className={`border-0 border-l border-[#00EA50] rounded-2xl fixed right-0 top-50 w-130! z-100
+                className={`border-0 border-l border-[#00E5A0] rounded-2xl fixed right-0 top-50 w-130! z-100
                     bg-black shadow-[0_0_40px_rgba(0,229,160,0.18)]
                     transition-transform duration-500 ease-linear
                     ${feedForm ? 'translate-x-0' : 'translate-x-full'}`}
             >
                 <form className='w-full' onSubmit={handleSubmit(handleFormSubmit)}>
                     <fieldset className="fieldset gap-3 p-5">
-                        <label className="label md:text-xl text-[#00EA50]">Name</label>
-                        <input type="text" className="input bg-white/4 border-0 border-b-2 border-[#00EA50] w-full" placeholder="Your Name" {...register("name", {required: true})} />
+                        <label className="label md:text-xl text-[#00E5A0]">Name</label>
+                        <input type="text" className="input bg-white/4 border-0 border-b-2 border-[#00E5A0] w-full" placeholder="Your Name" {...register("name", {required: true})} />
                         {errors.name?.type === "required" && <p className='text-red-500 p-2 '>Name field is required.</p>}
 
-                        <input type="file" className="file-input w-full border-0 border-b border-[#00EA50] mt-2" {...register("image", {required: true, validate: files=> files[0]?.size <= 2 * 1024 * 1024 || "Image must be under 2MB"})}/>
+                        <input type="file" className="file-input w-full border-0 border-b border-[#00E5A0] mt-2" {...register("image", {required: true, validate: files=> files[0]?.size <= 2 * 1024 * 1024 || "Image must be under 2MB"})}/>
                         <label className="label">Max size 2MB</label>
                         {errors.image?.type === "required" && <p className='text-red-500 p-2'>You must provide an image</p>}
                         {errors.image?.type === 'validate' && <p className='text-red-500 p-2'>Image must be under 2MB</p>}
 
-                        <label className="label md:text-xl text-[#00EA50]">Email</label>
-                        <input type="email" className="input bg-white/4 border-0 border-b-2 border-[#00EA50] w-full" placeholder="Email" {...register("email", {required: true})} />
+                        <label className="label md:text-xl text-[#00E5A0]">Email</label>
+                        <input type="email" className="input bg-white/4 border-0 border-b-2 border-[#00E5A0] w-full" placeholder="Email" {...register("email", {required: true})} />
                         {errors.email?.type === "required" && <p className='text-red-500 p-2'>Please provide your email.</p>}
 
-                        <label className='label md:text-xl text-[#00EA50]'>Feedback</label>
-                        <textarea placeholder="Your feedback" className="textarea textarea-accent bg-white/4 border-0 border-b-2 border-[#00EA50] w-full" {...register("feedback", {required: true, maxLength: 130})}></textarea>
+                        <label className='label md:text-xl text-[#00E5A0]'>Feedback</label>
+                        <textarea placeholder="Your feedback" className="textarea textarea-accent bg-white/4 border-0 border-b-2 border-[#00E5A0] w-full" {...register("feedback", {required: true, maxLength: 130})}></textarea>
                         {errors.feedback?.type === "required" && <p className='font-bold text-red-500 uppercase'>You forgot the most important thing...!!</p>}
                         {errors.feedback?.type === "maxLength" && <p className='font-bold text-red-500'>Please keep it under 130 character</p>}
 
@@ -175,7 +175,7 @@ const Feedback = () => {
                                 bg-white/5 
                                 uppercase 
                                 border 
-                                border-[#00EA50]
+                                border-[#00E5A0]
                                 hover:bg-[#00ea5276]
                                 hover:text-white
                                 transition-all
@@ -186,7 +186,7 @@ const Feedback = () => {
                 <button
                     type="button"
                     onClick={toggleFeedForm}
-                    className='font-bold text-[#00EA50] top-3 right-5 cursor-pointer absolute'>X</button>
+                    className='font-bold text-[#00E5A0] top-3 right-5 cursor-pointer absolute'>X</button>
             </div>
         </div>
     );

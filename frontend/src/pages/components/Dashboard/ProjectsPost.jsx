@@ -128,11 +128,11 @@ const ProjectsPost = () => {
                 <form className="post-form" onSubmit={handleSubmit(handleFormSubmit)}>
                     <label className="field-label"><span className="prompt">$</span> title</label>
                     <input type="text" className="field-input" placeholder="Project title" {...register("projectTitle", { required: true })} />
-                    {errors.projectTitle && <p className="text-[#00EA50] font-bold">Project name is missing.</p>}
+                    {errors.projectTitle && <p className="text-[#00E5A0] font-bold">Project name is missing.</p>}
 
                     <label className="field-label"><span className="prompt">$</span> description</label>
                     <textarea className="field-input field-textarea" placeholder="Short description" rows="3" {...register("description", { required: true })}></textarea>
-                    {errors.description && <p className="text-[#00EA50] font-bold">Description of the project is required</p>}
+                    {errors.description && <p className="text-[#00E5A0] font-bold">Description of the project is required</p>}
 
                     <div className="post-form__row">
                         <div className="post-form__col">
@@ -146,7 +146,7 @@ const ProjectsPost = () => {
                                     pattern: { value: /^https?:\/\/.+/, message: "must start with http:// or https://" },
                                 })}
                             />
-                            {errors.liveLink && <p className="text-[#00EA50] font-bold">{errors.liveLink.message || "Please input the live link"}</p>}
+                            {errors.liveLink && <p className="text-[#00E5A0] font-bold">{errors.liveLink.message || "Please input the live link"}</p>}
                         </div>
                         <div className="post-form__col">
                             <label className="field-label"><span className="prompt">$</span> github_url</label>
@@ -159,13 +159,13 @@ const ProjectsPost = () => {
                                     pattern: { value: /^https?:\/\/.+/, message: "must start with http:// or https://" },
                                 })}
                             />
-                            {errors.gitlink && <p className="text-[#00EA50] font-bold">{errors.gitlink.message || "Please input the github link"}</p>}
+                            {errors.gitlink && <p className="text-[#00E5A0] font-bold">{errors.gitlink.message || "Please input the github link"}</p>}
                         </div>
                     </div>
 
                     <label className="field-label"><span className="prompt">$</span> tech_stack</label>
                     <input type="text" className="field-input" placeholder="React, Node.js, MongoDB (comma separated)" {...register("teckStack", { required: true })} />
-                    {errors.teckStack && <p className="text-[#00EA50] font-bold">Please input which tech stack has been used on this project</p>}
+                    {errors.teckStack && <p className="text-[#00E5A0] font-bold">Please input which tech stack has been used on this project</p>}
 
                     <label className="field-label">
                         <span className="prompt">$</span> thumbnail
@@ -190,7 +190,7 @@ const ProjectsPost = () => {
                             })}
                         />
                     </label>
-                    {errors.thumbnail && <p className="text-[#00EA50] font-bold">Thumbnail is missing.</p>}
+                    {errors.thumbnail && <p className="text-[#00E5A0] font-bold">Thumbnail is missing.</p>}
 
                     <label className="field-label">
                         <span className="prompt">$</span> screenshots
@@ -224,7 +224,7 @@ const ProjectsPost = () => {
                             })}
                         />
                     </label>
-                    {errors.screenshots && <p className="text-[#00EA50] font-bold">{errors.screenshots.message || "Screenshots are missing."}</p>}
+                    {errors.screenshots && <p className="text-[#00E5A0] font-bold">{errors.screenshots.message || "Screenshots are missing."}</p>}
 
                     {screenshotPreviews.length > 0 && (
                         <div className="screenshot-grid">

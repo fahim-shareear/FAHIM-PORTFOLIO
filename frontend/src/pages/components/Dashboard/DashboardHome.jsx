@@ -218,25 +218,25 @@ const DashboardHome = () => {
         });
     };
 
-    if (loading) return <p className="font-bold text-xl text-[#00ea50] text-center">Loading.........</p>
+    if (loading) return <p className="font-bold text-xl text-[#00E5A0] text-center">Loading.........</p>
 
 
     return (
         <div>
             <div className="w-full text-center mt-4">
-                <h1 className="font-bold text-xl text-[#00ea50] uppercase">welcome to the dashboard homepage</h1>
+                <h1 className="font-bold text-xl text-[#00E5A0] uppercase">welcome to the dashboard homepage</h1>
             </div>
             <div className="w-full certification-container">
                 <div className="w-[90%] m-3">
                     <div className="ml-3">
-                        <h2 className="font-bold text-xl text-[#00ea50] p-1">Certification Posts:</h2>
+                        <h2 className="font-bold text-xl text-[#00E5A0] p-1">Certification Posts:</h2>
                     </div>
                     <div className="grid grid-cols-5 gap-3 ml-3">
                         {
                             certifications.map((cert) => (
                                 <div
                                     key={cert._id}
-                                    className="group relative flex flex-col gap-3 border border-[#00ea50]/40 rounded-xl p-4 bg-white/5 backdrop-blur-sm hover:border-[#00ea50] hover:shadow-[0_0_20px_rgba(0,234,80,0.35)] transition-all duration-300">
+                                    className="group relative flex flex-col gap-3 border border-[#00E5A0]/40 rounded-xl p-4 bg-white/5 backdrop-blur-sm hover:border-[#00E5A0] hover:shadow-[0_0_20px_rgba(0,234,80,0.35)] transition-all duration-300">
                                     <div className="w-full aspect-video rounded-lg overflow-hidden bg-black/40">
                                         {cert.image ? (
                                             <img
@@ -245,22 +245,22 @@ const DashboardHome = () => {
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-[#00ea50]/40 text-xs">
+                                            <div className="w-full h-full flex items-center justify-center text-[#00E5A0]/40 text-xs">
                                                 No image
                                             </div>
                                         )}
                                     </div>
 
-                                    <h1 className="font-bold text-base text-[#00ea50]">{cert.courseTitle}</h1>
+                                    <h1 className="font-bold text-base text-[#00E5A0]">{cert.courseTitle}</h1>
                                     <p className="text-sm text-white/70">{cert.instituteName}</p>
-                                    <p className="text-xs text-[#00ea50] opacity-40">{cert.duration} months</p>
+                                    <p className="text-xs text-[#00E5A0] opacity-40">{cert.duration} months</p>
 
                                     {cert.topics?.length > 0 && (
                                         <div className="flex flex-wrap gap-2 mt-1">
                                             {cert.topics.map((topic, idx) => (
                                                 <span
                                                     key={idx}
-                                                    className="text-xs px-2 py-1 rounded-full border border-[#00ea50]/50 text-[#00ea50] bg-[#00ea50]/5"
+                                                    className="text-xs px-2 py-1 rounded-full border border-[#00E5A0]/50 text-[#00E5A0] bg-[#00E5A0]/5"
                                                 >
                                                     {topic}
                                                 </span>
@@ -270,7 +270,7 @@ const DashboardHome = () => {
                                     <div className="absolute top-0 right-5">
                                         <button
                                             onClick={() => openCertModal(cert)}
-                                            className="font-bold text-[#00ea50] mt-3 border border-[#00ea50] rounded-md p-1 cursor-pointer"
+                                            className="font-bold text-[#00E5A0] mt-3 border border-[#00E5A0] rounded-md p-1 cursor-pointer"
                                         >
                                             Edit
                                         </button>
@@ -285,13 +285,13 @@ const DashboardHome = () => {
             <div className="career-container w-full">
                 <div className="w-[90%] m-3">
                     <div className="ml-3">
-                        <h1 className="font-bold text-xl text-[#00ea50]">Career posts:</h1>
+                        <h1 className="font-bold text-xl text-[#00E5A0]">Career posts:</h1>
                     </div>
                     <div className="grid grid-cols-5 gap-3 ml-3">
                         {
                             career.map((car) => (
-                                <div key={car._id} className="group relative flex flex-col gap-2 border border-[#00ea50]/40 rounded-xl p-4 bg-white/5 backdrop-blur-sm hover:border-[#00ea50]">
-                                    <h1 className="font-bold text-xl text-[#00ea50]">{car.companyName}</h1>
+                                <div key={car._id} className="group relative flex flex-col gap-2 border border-[#00E5A0]/40 rounded-xl p-4 bg-white/5 backdrop-blur-sm hover:border-[#00E5A0]">
+                                    <h1 className="font-bold text-xl text-[#00E5A0]">{car.companyName}</h1>
                                     <h1 className="text-sm">{car.position}</h1>
                                     <h1 className="text-[#53f900]">{car.duration}</h1>
                                     <h1>{car.address}</h1>
@@ -300,7 +300,7 @@ const DashboardHome = () => {
                                             <div className="flex flex-col gap-2 px-2 py-2">
                                                 {
                                                     car.responsibilities.map((res, id) => (
-                                                        <li key={id} className="text-xs px-2 text-[#00ea50]">
+                                                        <li key={id} className="text-xs px-2 text-[#00E5A0]">
                                                             {res}
                                                         </li>
                                                     ))
@@ -312,7 +312,7 @@ const DashboardHome = () => {
                                     <div className="absolute top-0 right-4">
                                         <button
                                             onClick={() => openCareerModal(car)}
-                                            className="font-bold text-[#00ea50] p-1 border border-[#00ea50] rounded-md mt-2 cursor-pointer"
+                                            className="font-bold text-[#00E5A0] p-1 border border-[#00E5A0] rounded-md mt-2 cursor-pointer"
                                         >
                                             Edit
                                         </button>
@@ -329,7 +329,7 @@ const DashboardHome = () => {
                 <div className="modal-box">
                     {selectedCert && (
                         <>
-                            <h3 className="font-bold text-lg text-[#00ea50]">Edit Certification</h3>
+                            <h3 className="font-bold text-lg text-[#00E5A0]">Edit Certification</h3>
 
                             <form onSubmit={certForm.handleSubmit(onUpdateCert)} className="flex flex-col gap-3 mt-4">
                                 <div>
@@ -386,7 +386,7 @@ const DashboardHome = () => {
                 <div className="modal-box">
                     {selectedCareer && (
                         <>
-                            <h3 className="font-bold text-lg text-[#00ea50]">Edit Career Entry</h3>
+                            <h3 className="font-bold text-lg text-[#00E5A0]">Edit Career Entry</h3>
 
                             <form onSubmit={careerForm.handleSubmit(onUpdateCareer)} className="flex flex-col gap-3 mt-4">
                                 <div>

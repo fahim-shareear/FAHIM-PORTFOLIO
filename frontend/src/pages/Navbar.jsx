@@ -41,7 +41,7 @@ const Navbar = () => {
 
 
     return (
-        <div className="main-container">
+        <div className="main-container ml-5">
             <div className="nav-container">
                 <div className={`outer-ring ${isOpen ? "open" : ""}`}>
                     <div className="sub-menu">

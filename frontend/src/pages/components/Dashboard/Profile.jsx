@@ -23,14 +23,14 @@ const Profile = () => {
 
     return (
         <div className="w-full z-10 main-container relative">
-            <div className="border-[#00ea50] rounded-xl shadow-md profile-container">
+            <div className="border-[#00E5A0] rounded-xl shadow-md profile-container">
                 <div className="md:max-w-7xl mx-auto profile-top">
-                    <img src={user.image} alt={user.name} className="w-30 h-30 rounded-full border border-[#00ea50]" />
+                    <img src={user.image} alt={user.name} className="w-30 h-30 rounded-full border border-[#00E5A0]" />
                     <div>
-                        <h1 className="font-bold text-xl text-[#00ea50]">{user.name}</h1>
+                        <h1 className="font-bold text-xl text-[#00E5A0]">{user.name}</h1>
                     </div>
                     <div>
-                        <h1 className="font-bold text-xl text-[#00ea50]">{user.email}</h1>
+                        <h1 className="font-bold text-xl text-[#00E5A0]">{user.email}</h1>
                     </div>
                     <div>
                         <button onClick={useSignOut} className="signOutButton font-bold">Sign Out</button>
@@ -40,7 +40,7 @@ const Profile = () => {
                     <button onClick={hadnleNavigate} className="c-change">Change Password</button>
                 </div>
                 <div className="p-3">
-                    <button onClick={updateProfile} className="border cursor-pointer border-[#00ea50] rounded-xl p-2 text-[#00ea50] font-bold">Update Profile</button>
+                    <button onClick={updateProfile} className="border cursor-pointer border-[#00E5A0] rounded-xl p-2 text-[#00E5A0] font-bold">Update Profile</button>
                 </div>
             </div>
         </div>

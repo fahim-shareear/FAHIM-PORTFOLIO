@@ -47,13 +47,13 @@ const CertificationDrawer = () => {
                 </button>
                 <div className="cert-content">
                     <div className="md:max-w-7xl mx-auto">
-                        <h1 className="font-bold text-xl text-[#00ea50] underline p-2">Certifications:</h1>
+                        <h1 className="font-bold text-xl text-[#00E5A0] underline p-2">Certifications:</h1>
 
                         <div className="grid md:grid-cols-3 grid-cols-1 gap-5 p-2">
                             {!isLoading && !isError && certifications.map((cert) => (
                                 <div
                                     key={cert._id}
-                                    className="group flex flex-col gap-3 border border-[#00ea50]/40 rounded-xl p-4 bg-white/5 backdrop-blur-sm hover:border-[#00ea50] hover:shadow-[0_0_20px_rgba(0,234,80,0.35)] transition-all duration-300">
+                                    className="group flex flex-col gap-3 border border-[#00E5A0]/40 rounded-xl p-4 bg-white/5 backdrop-blur-sm hover:border-[#00E5A0] hover:shadow-[0_0_20px_rgba(0,234,80,0.35)] transition-all duration-300">
                                     <div className="w-full aspect-video rounded-lg overflow-hidden bg-black/40">
                                         {cert.image ? (
                                             <img
@@ -62,22 +62,22 @@ const CertificationDrawer = () => {
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-[#00ea50]/40 text-xs">
+                                            <div className="w-full h-full flex items-center justify-center text-[#00E5A0]/40 text-xs">
                                                 No image
                                             </div>
                                         )}
                                     </div>
 
-                                    <h1 className="font-bold text-base text-[#00ea50]">{cert.courseTitle}</h1>
+                                    <h1 className="font-bold text-base text-[#00E5A0]">{cert.courseTitle}</h1>
                                     <p className="text-sm text-white/70">{cert.instituteName}</p>
-                                    <p className="text-xs text-[#00ea50] opacity-40">{cert.duration} months</p>
+                                    <p className="text-xs text-[#00E5A0] opacity-40">{cert.duration} months</p>
 
                                     {cert.topics?.length > 0 && (
                                         <div className="flex flex-wrap gap-2 mt-1">
                                             {cert.topics.map((topic, idx) => (
                                                 <span
                                                     key={idx}
-                                                    className="text-xs px-2 py-1 rounded-full border border-[#00ea50]/50 text-[#00ea50] bg-[#00ea50]/5"
+                                                    className="text-xs px-2 py-1 rounded-full border border-[#00E5A0]/50 text-[#00E5A0] bg-[#00E5A0]/5"
                                                 >
                                                     {topic}
                                                 </span>
@@ -89,11 +89,11 @@ const CertificationDrawer = () => {
                         </div>
                     </div>
                     <div className="md:max-w-7xl mx-auto mt-10">
-                        <h1 className="font-bold text-xl text-[#00ea50] underline">Career:</h1>
+                        <h1 className="font-bold text-xl text-[#00E5A0] underline">Career:</h1>
                         <div className="grid md:grid-cols-3 grid-cols-1 gap-5 p-2">
                             {!isLoading && !isError && career.map((car) => (
-                                <div key={car._id} className="group flex flex-col gap-2 border border-[#00ea50]/40 rounded-xl p-4 bg-white/5 backdrop-blur-sm hover:border-[#00ea50]">
-                                    <h1 className="font-bold text-xl text-[#00ea50]">{car.companyName}</h1>
+                                <div key={car._id} className="group flex flex-col gap-2 border border-[#00E5A0]/40 rounded-xl p-4 bg-white/5 backdrop-blur-sm hover:border-[#00E5A0]">
+                                    <h1 className="font-bold text-xl text-[#00E5A0]">{car.companyName}</h1>
                                     <h1 className="text-sm">{car.position}</h1>
                                     <h1 className="text-[#53f900]">{car.duration}</h1>
                                     <h1>{car.address}</h1>
@@ -102,7 +102,7 @@ const CertificationDrawer = () => {
                                             <div className="flex flex-col gap-2 px-2 py-2">
                                                 {
                                                     car.responsibilities.map((res, id) => (
-                                                        <li key={id} className="text-xs px-2 text-[#00ea50]">
+                                                        <li key={id} className="text-xs px-2 text-[#00E5A0]">
                                                             {res}
                                                         </li>
                                                     ))

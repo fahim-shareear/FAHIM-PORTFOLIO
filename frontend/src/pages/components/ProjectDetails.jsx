@@ -92,7 +92,7 @@ const ProjectDetails = () => {
                             position: absolute;
                             bottom: 0;
                             border-radius: 50%;
-                            background: #00EA50;
+                            background: #00E5A0;
                             box-shadow: 0 0 6px 1px rgba(0, 229, 160, 0.6);
                             animation-name: rise;
                             animation-timing-function: linear;

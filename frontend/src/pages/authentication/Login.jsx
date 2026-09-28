@@ -26,7 +26,7 @@ const Login = () => {
                     position: "bottom-center",
                     duration: 2000,
                     style:{
-                        background: "#00EA50",
+                        background: "#00E5A0",
                         color: "white",
                         fontWeight: "bold",
                         fontSize: "18px",
@@ -88,7 +88,7 @@ const Login = () => {
                             autoComplete="current-password"
                             {...register("password", { required: true })}
                         />
-                        <button className="top-9 right-5 absolute text-xl text-[#00EA50] cursor-pointer" onClick={handleEye}>
+                        <button className="top-9 right-5 absolute text-xl text-[#00E5A0] cursor-pointer" onClick={handleEye}>
                             {eye ? <FaEyeSlash /> : <FaEye />}
                         </button>
                         {errors.password && <p className="auth-error p-2 capitalize text-sm text-red-500">password is required</p>}

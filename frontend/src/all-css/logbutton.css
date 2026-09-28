@@ -5,10 +5,10 @@
     display: flex;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid #00EA50;
+    border: 1px solid #00E5A0;
     border-right: 0;
     border-radius: 50px 0 0 50px;
-    box-shadow: 0 0 10px 1px #00EA50;
+    box-shadow: 0 0 10px 1px #00E5A0;
     padding: 12px 20px 12px 12px;
     gap: 20px;
     transform: translateX(calc(100% - 50px));
@@ -27,7 +27,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #00EA50;
+    color: #00E5A0;
     font-size: 1.5rem;
     cursor: pointer;
 }
@@ -39,7 +39,7 @@
 }
 
 .log-link {
-    color: #00EA50;
+    color: #00E5A0;
     font-weight: bold;
     text-transform: capitalize;
     text-decoration: none;

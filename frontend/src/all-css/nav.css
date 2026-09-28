@@ -126,3 +126,9 @@
     background-color: rgba(0, 229, 160, 0.3);
     transform: scale(1.05);
 }
+
+@media (max-width: 767px) {
+    .main-container {
+        left: 7%;
+    }
+}

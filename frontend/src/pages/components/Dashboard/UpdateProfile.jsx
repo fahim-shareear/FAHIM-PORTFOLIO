@@ -53,16 +53,16 @@ const UpdateProfile = () => {
                 <form onSubmit={handleSubmit(handleUpdateProfileUpdateForm)}>
                     <fieldset className="fieldset flex items-start flex-col w-110 gap-5">
                         <div className="w-full">
-                            <label className="label font-bold text-xl opacity-100 text-[#00ea50] py-2">Name:</label>
-                            <input type="text" placeholder="Name" className="input bg-black/5 w-full border-0 border-b border-[#00ea50]" {...register("name", { required: true })} />
+                            <label className="label font-bold text-xl opacity-100 text-[#00E5A0] py-2">Name:</label>
+                            <input type="text" placeholder="Name" className="input bg-black/5 w-full border-0 border-b border-[#00E5A0]" {...register("name", { required: true })} />
                             {errors.name?.type === "required" && <p className="font-bold text-sm text-[300ea50]">Please input your name.</p>}
                         </div>
                         <div className="w-full">
-                            <label className="label font-bold text-xl text-[#00ea50] py-2">Profile Image:</label>
-                            <input type="file" className="file-input w-full file-input-success bg-black/5 border-0 border-b border-[#00ea50]" />
+                            <label className="label font-bold text-xl text-[#00E5A0] py-2">Profile Image:</label>
+                            <input type="file" className="file-input w-full file-input-success bg-black/5 border-0 border-b border-[#00E5A0]" />
                         </div>
                     </fieldset>
-                    <button className="btn w-full mt-5 cursor-pointer bg-black/5 border border-[#00ea50] text-xl hover:bg-[#00ea50] transition-all linear" type="submit">Submit</button>
+                    <button className="btn w-full mt-5 cursor-pointer bg-black/5 border border-[#00E5A0] text-xl hover:bg-[#00E5A0] transition-all linear" type="submit">Submit</button>
                 </form>
             </div>
         </div>
