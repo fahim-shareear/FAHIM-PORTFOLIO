@@ -130,5 +130,6 @@
 @media (max-width: 767px) {
     .main-container {
         left: 7%;
+        visibility: hidden;
     }
 }

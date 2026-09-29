@@ -49,3 +49,10 @@
 .log-link:hover {
     text-decoration: underline;
 }
+
+
+@media (max-width: 767px){
+    .log-panel{
+        visibility: hidden;
+    }
+}

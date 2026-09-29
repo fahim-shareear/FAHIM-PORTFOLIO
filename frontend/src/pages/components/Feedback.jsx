@@ -19,7 +19,7 @@ const Feedback = () => {
     const [loading, setLoading] = useState(true);
     const [feedForm, setFeedForm] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-    const {register, reset, handleSubmit,formState: {errors}} = useForm();
+    const { register, reset, handleSubmit, formState: { errors } } = useForm();
 
     useEffect(() => {
         axiosinstance.get('/feedback').then(res => {
@@ -38,7 +38,7 @@ const Feedback = () => {
     };
 
     //handle form submission:
-    const handleFormSubmit = (data) =>{
+    const handleFormSubmit = (data) => {
         // console.log(data);
         const profileImg = data.image[0];
         setSubmitting(true);
@@ -48,7 +48,7 @@ const Feedback = () => {
         formData.append('image', profileImg);
 
         const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host}`
-        axios.post(image_API_URL, formData).then(res =>{
+        axios.post(image_API_URL, formData).then(res => {
             const photoURL = res.data.data.url;
 
             //feedback payload:
@@ -59,15 +59,15 @@ const Feedback = () => {
                 photoURL: photoURL,
             };
 
-            axiosinstance.post('/feedback', feedbackInfo).then(res =>{
+            axiosinstance.post('/feedback', feedbackInfo).then(res => {
                 toast.success(res.data.message);
                 reset();
                 setFeedForm(false);
                 setSubmitting(false);
-            }).catch((err)=>{
+            }).catch((err) => {
                 toast.error(err.data.message);
             });
-        }).catch(()=>{
+        }).catch(() => {
             toast.error("Unable to upload your photo.");
         })
     }
@@ -131,7 +131,7 @@ const Feedback = () => {
                                 transition-all
                                 duration-400
                                 linear'
-                                onClick={toggleFeedForm}>Provide Feedback</button>
+                    onClick={toggleFeedForm}>Provide Feedback</button>
             </div>
 
             {/* backdrop - click outside to close */}
@@ -142,35 +142,42 @@ const Feedback = () => {
             />
 
             {/* sliding panel - always mounted, transform-driven */}
+            {/* sliding panel - always mounted, transform-driven */}
             <div
-                className={`border-0 border-l border-[#00E5A0] rounded-2xl fixed right-0 top-50 w-130! z-100
-                    bg-black shadow-[0_0_40px_rgba(0,229,160,0.18)]
-                    transition-transform duration-500 ease-linear
-                    ${feedForm ? 'translate-x-0' : 'translate-x-full'}`}
+                className={`border-0 border-l border-[#00E5A0] fixed right-0 top-0 h-screen w-full sm:w-100 md:w-110 z-100
+        bg-black shadow-[0_0_40px_rgba(0,229,160,0.18)]
+        overflow-y-auto
+        transition-transform duration-500 ease-linear
+        ${feedForm ? 'translate-x-0' : 'translate-x-full'}`}
             >
+                <button
+                    type="button"
+                    onClick={toggleFeedForm}
+                    className='font-bold text-[#00E5A0] top-3 right-5 cursor-pointer fixed z-101'>X</button>
+
                 <form className='w-full' onSubmit={handleSubmit(handleFormSubmit)}>
-                    <fieldset className="fieldset gap-3 p-5">
+                    <fieldset className="fieldset gap-3 p-5 pt-14">
                         <label className="label md:text-xl text-[#00E5A0]">Name</label>
-                        <input type="text" className="input bg-white/4 border-0 border-b-2 border-[#00E5A0] w-full" placeholder="Your Name" {...register("name", {required: true})} />
+                        <input type="text" className="input bg-white/4 border-0 border-b-2 border-[#00E5A0] w-full" placeholder="Your Name" {...register("name", { required: true })} />
                         {errors.name?.type === "required" && <p className='text-red-500 p-2 '>Name field is required.</p>}
 
-                        <input type="file" className="file-input w-full border-0 border-b border-[#00E5A0] mt-2" {...register("image", {required: true, validate: files=> files[0]?.size <= 2 * 1024 * 1024 || "Image must be under 2MB"})}/>
+                        <input type="file" className="file-input w-full border-0 border-b border-[#00E5A0] mt-2" {...register("image", { required: true, validate: files => files[0]?.size <= 2 * 1024 * 1024 || "Image must be under 2MB" })} />
                         <label className="label">Max size 2MB</label>
                         {errors.image?.type === "required" && <p className='text-red-500 p-2'>You must provide an image</p>}
                         {errors.image?.type === 'validate' && <p className='text-red-500 p-2'>Image must be under 2MB</p>}
 
                         <label className="label md:text-xl text-[#00E5A0]">Email</label>
-                        <input type="email" className="input bg-white/4 border-0 border-b-2 border-[#00E5A0] w-full" placeholder="Email" {...register("email", {required: true})} />
+                        <input type="email" className="input bg-white/4 border-0 border-b-2 border-[#00E5A0] w-full" placeholder="Email" {...register("email", { required: true })} />
                         {errors.email?.type === "required" && <p className='text-red-500 p-2'>Please provide your email.</p>}
 
                         <label className='label md:text-xl text-[#00E5A0]'>Feedback</label>
-                        <textarea placeholder="Your feedback" className="textarea textarea-accent bg-white/4 border-0 border-b-2 border-[#00E5A0] w-full" {...register("feedback", {required: true, maxLength: 130})}></textarea>
+                        <textarea placeholder="Your feedback" className="textarea textarea-accent bg-white/4 border-0 border-b-2 border-[#00E5A0] w-full" {...register("feedback", { required: true, maxLength: 130 })}></textarea>
                         {errors.feedback?.type === "required" && <p className='font-bold text-red-500 uppercase'>You forgot the most important thing...!!</p>}
                         {errors.feedback?.type === "maxLength" && <p className='font-bold text-red-500'>Please keep it under 130 character</p>}
 
                         <button type='submit'
-                                disabled={submitting}
-                                className="btn btn-neutral mt-4 shadow-[inset_0_0_40px_rgba(0,229,160,0.15)] 
+                            disabled={submitting}
+                            className="btn btn-neutral mt-4 mb-6 shadow-[inset_0_0_40px_rgba(0,229,160,0.15)] 
                                 cursor-pointer 
                                 bg-white/5 
                                 uppercase 
@@ -183,10 +190,6 @@ const Feedback = () => {
                                 linear">{submitting ? 'Submitting......' : 'Submit'}</button>
                     </fieldset>
                 </form>
-                <button
-                    type="button"
-                    onClick={toggleFeedForm}
-                    className='font-bold text-[#00E5A0] top-3 right-5 cursor-pointer absolute'>X</button>
             </div>
         </div>
     );
