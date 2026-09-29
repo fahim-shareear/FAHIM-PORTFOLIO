@@ -13,6 +13,7 @@ import ProjectDetails from "../pages/components/ProjectDetails";
 import Profile from "../pages/components/Dashboard/Profile";
 import ChangePassword from "../pages/components/Dashboard/ChangePassword";
 import UpdateProfile from "../pages/components/Dashboard/UpdateProfile";
+import ManageResume from "../pages/components/Dashboard/ManageResume";
 
 const routes = createBrowserRouter([
     {
@@ -38,7 +39,8 @@ const routes = createBrowserRouter([
             {path: "certification-post", Component: CertificationPost},
             {path: "profile", Component: Profile},
             {path: "change-password", Component: ChangePassword},
-            {path: "update-profile", Component: UpdateProfile}
+            {path: "update-profile", Component: UpdateProfile},
+            {path: "manage-resume", Component: ManageResume},
         ]
     }
 ]);

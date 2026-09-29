@@ -20,6 +20,10 @@ const Profile = () => {
         navigate("/dashboard/update-profile")
     }
 
+    const manageResume = () =>{
+        navigate("/dashboard/manage-resume");
+    };
+
 
     return (
         <div className="w-full z-10 main-container relative">
@@ -41,6 +45,9 @@ const Profile = () => {
                 </div>
                 <div className="p-3">
                     <button onClick={updateProfile} className="border cursor-pointer border-[#00E5A0] rounded-xl p-2 text-[#00E5A0] font-bold">Update Profile</button>
+                </div>
+                <div className="p-3">
+                    <button onClick={manageResume} className="border cursor-pointer border-[#00E5A0] rounded-xl p-2 text-[#00E5A0] font-bold">Manage Resume</button>
                 </div>
             </div>
         </div>
