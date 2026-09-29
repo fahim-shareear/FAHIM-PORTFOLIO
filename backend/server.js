@@ -619,6 +619,7 @@ async function run() {
         app.get("/resume", async(req, res)=>{
             try{
                 const resume = await resumeCollection.findOne({key: "main"}, {projection: {_id: 0}});
+                res.send(resume || {});
             }catch(error){
                 res.status(500).send({message: "unable to fetch resume"});
             };
@@ -652,7 +653,7 @@ async function run() {
                     try{
                         await cloudinary.uploader.destroy(existing.publicId, {resource_type: "raw"});
                     }catch(error){
-                        res.status(500).send({message: error.message});
+                       return res.status(500).send({message: error.message});
                     };
                 };
 
@@ -667,17 +668,16 @@ async function run() {
             try{
                 const existing = await resumeCollection.findOneAndDelete({key: "main"});
                 if(!existing){
-                    return res.status(404).send({message: "no resume to delete"});
+                    return res.status(400).send({message: "no resume to delete"});
                 };
 
                 try{
-                    await cloudinary.uploader.destroy(existing.publicId, {resource_type: "raw"});
-                }catch(error){
-                    res.status(500).send({message: "cloudinary resume delete failed" || error.message})
+                    await cloudinary.uploader.destroy(existing.publicId, {resource_type: "raw"})
+                }catch(err){
+                    res.status(500).send({message: "Resume deletion failed"});
                 };
 
-                await resumeCollection.deleteOne({key: "main"});
-                res.send({message: "resume deleted"});
+                res.send({message: "Resume Deleted"});
             }catch(error){
                 res.status(500).send({message: "unable to delete resume"});
             };

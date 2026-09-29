@@ -1,7 +1,45 @@
+import { useState } from "react";
 import "../../all-css/banner.css";
 import profilebg from "../../assets/profilebg.png"
+import useAxios from "../../axios/useAxios";
+import { toast } from "react-toastify";
 
 const Banner = () => {
+    const axiosSecure = useAxios();
+    const [downloading, setDownloading] = useState(false);
+
+    const handleResumeDownload = async () =>{
+        setDownloading(true);
+        try{
+            const res = await axiosSecure.get("/resume");
+            if(!res.data?.url){
+                toast.error("Resume not available right now", {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                });
+                return;
+            };
+
+            const downloadUrl = res.data.url.replace("/upload", "/upload/fl_attachement/")
+
+            const link = document.createElement("a");
+            link.href = downloadUrl;
+            link.download = res.data.fileName || "fahim-shareear.pdf";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }catch(error){
+            toast.error(error?.response?.data?.message || "Unable to download resume", {
+                position: "bottom-center",
+                autoClose: 3000,
+            });
+        }finally{
+            setDownloading(false);
+        };
+
+    };
+
+
     return (
         <div className="main-hero relative">
             <div className="secondary" style={{ backgroundImage: `url(${profilebg})` }}>
@@ -51,8 +89,10 @@ const Banner = () => {
                             <button
                                 className="px-5 py-2 text-sm rounded transition cursor-pointer"
                                 style={{ border: '1px solid #00e5a0', color: '#00e5a0' }}
+                                onClick={handleResumeDownload}
+                                disabled={downloading}
                             >
-                                Resume
+                                {downloading ? "Preparing" : "Resume"}
                             </button>
                         </div>
                     </div>
