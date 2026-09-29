@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 const verifyToken = require('./components/authmiddleware/verifyToken');
 const cloudinary = require('cloudinary').v2;
 const port = process.env.PORT || 3000;
-const {loginLimiter, changePasswordLimiter, feedbackLimiter, otherLimiters,} = require("./components/authmiddleware/ratelimiters");
+const { loginLimiter, changePasswordLimiter, feedbackLimiter, otherLimiters, } = require("./components/authmiddleware/ratelimiters");
 
 
 
@@ -75,6 +75,42 @@ const getPublicIdFromUrl = (url) => {
     }
 };
 
+//multer instance for file storage pdf:
+const resumeUpload = multer({
+    storage,
+    limits: { fileSize: 4 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype !== "application/pdf") {
+            return cb(new Error("only pdf files are allowed"));
+        }
+        cb(null, true);
+    },
+});
+
+const handleResumeUpload = (req, res, next) => {
+    resumeUpload.single("resume")(req, res, (err) => {
+        if (err) return res.status(400).send({ message: err.message });
+        next();
+    });
+};
+
+const uploadPdfToCloudinary = (fileBuffer) => {
+    return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+            {
+                folder: "portfolio-resume",
+                resource_type: "raw",
+                public_id: `resume-${Date.now()}.pdf`,
+            },
+            (error, result) => {
+                if (error) return reject(error);
+                resolve(result);
+            }
+        );
+        stream.end(fileBuffer);
+    });
+};
+
 app.get("/", (req, res) => {
     res.send("Server is up and running");
 });
@@ -89,6 +125,7 @@ async function run() {
         const userCollection = portfolio.collection("users");
         const careearCollection = portfolio.collection("career");
         const certificationCollection = portfolio.collection("certification");
+        const resumeCollection = portfolio.collection("resume");
 
 
         //auth related api's:
@@ -179,7 +216,7 @@ async function run() {
         })
 
         //password update related api:
-        app.patch("/change-password",  verifyToken, changePasswordLimiter, async (req, res) => {
+        app.patch("/change-password", verifyToken, changePasswordLimiter, async (req, res) => {
             const { currentPassword, newPassword } = req.body;
 
             if (!currentPassword || !newPassword) {
@@ -432,16 +469,16 @@ async function run() {
             };
         });
 
-        app.delete("/feedback/:id", verifyToken, otherLimiters, async(req, res)=>{
+        app.delete("/feedback/:id", verifyToken, otherLimiters, async (req, res) => {
             const id = req.params.id;
-            const query = {_id: new ObjectId(id)};
+            const query = { _id: new ObjectId(id) };
 
-            try{
+            try {
                 const result = await feedbackCollection.deleteOne(query);
                 res.send(result);
-            }catch(error){
-                if(error){
-                    return res.status(400).send({message: "feedback not found!"})
+            } catch (error) {
+                if (error) {
+                    return res.status(400).send({ message: "feedback not found!" })
                 }
             };
         });
@@ -575,6 +612,75 @@ async function run() {
             } catch (error) {
                 res.status(500).send({ message: "unable to fetch certification data" });
             }
+        });
+
+
+        //resume reletad api:
+        app.get("/resume", async(req, res)=>{
+            try{
+                const resume = await resumeCollection.findOne({key: "main"}, {projection: {_id: 0}});
+            }catch(error){
+                res.status(500).send({message: "unable to fetch resume"});
+            };
+
+        });
+
+        //upload resume or replace it:
+        app.post("/resume", verifyToken, otherLimiters, handleResumeUpload, async(req, res)=>{
+            if(!req.file){
+                return res.status(400).send({message: "pdf file is required"});
+            };
+
+            try{
+                const existing = await resumeCollection.findOne({key: "main"});
+                const uploaded = await uploadPdfToCloudinary(req.file.buffer);
+
+                await resumeCollection.updateOne(
+                    {key: "main"},
+                    {
+                        $set: {
+                            url: uploaded.secure_url,
+                            publicId: uploaded.public_id,
+                            fileName: req.file.originalname,
+                            uploadedAt: new Date(),
+                        },
+                    },
+                    {upsert: true}
+                );
+
+                if(existing?.publicId){
+                    try{
+                        await cloudinary.uploader.destroy(existing.publicId, {resource_type: "raw"});
+                    }catch(error){
+                        res.status(500).send({message: error.message});
+                    };
+                };
+
+                res.status(201).send({message: "resume uploaded"})
+            }catch(error){
+                res.status(500).send({message: "unable to upload resume"});
+            };
+        });
+
+        //deleting the resume:
+        app.delete("/resume", verifyToken, otherLimiters, async(req, res)=>{
+            try{
+                const existing = await resumeCollection.findOneAndDelete({key: "main"});
+                if(!existing){
+                    return res.status(404).send({message: "no resume to delete"});
+                };
+
+                try{
+                    await cloudinary.uploader.destroy(existing.publicId, {resource_type: "raw"});
+                }catch(error){
+                    res.status(500).send({message: "cloudinary resume delete failed" || error.message})
+                };
+
+                await resumeCollection.deleteOne({key: "main"});
+                res.send({message: "resume deleted"});
+            }catch(error){
+                res.status(500).send({message: "unable to delete resume"});
+            };
         });
 
 
