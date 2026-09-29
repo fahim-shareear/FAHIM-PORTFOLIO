@@ -20,7 +20,7 @@ const Banner = () => {
                 return;
             };
 
-            const downloadUrl = res.data.url.replace("/upload", "/upload/fl_attachement/")
+            const downloadUrl = res.data.url.replace("/upload/", "/upload/fl_attachment/");
 
             const link = document.createElement("a");
             link.href = downloadUrl;
