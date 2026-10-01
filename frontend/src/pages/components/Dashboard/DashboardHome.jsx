@@ -369,11 +369,11 @@ const DashboardHome = () => {
 
             {/* feedback posts and it's functionality */}
 
-            <div className="md:max-w-7xl mx-auto m-2">
+            <div className="mx-auto m-2">
                 <div className="m-3 p-3">
                     <h1 className="font-bold text-xl text-[#00e5a0] p-2">Feedback Posts:</h1>
                 </div>
-                <div className="grid grid-cols-4 gap-4 mt-5">
+                <div className="grid grid-cols-4 gap-1 mt-5 ml-20">
                     {
                         feedback.map((f) => (
                             <div key={f._id} className="w-100 rounded-md border border-[#00e5a0] relative flex items-start flex-col gap-2 p-3">
