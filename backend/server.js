@@ -459,13 +459,33 @@ async function run() {
         });
 
         //feedback posting api:
-        app.post("/feedback", feedbackLimiter, async (req, res) => {
-            const feedBack = req.body;
+        //feedback posting api:
+        app.post("/feedback", feedbackLimiter, upload.single("image"), async (req, res) => {
+            const { name, email, feedback } = req.body;
+
+            if (!name || !email || !feedback) {
+                return res.status(400).send({ message: "name, email and feedback are required" });
+            };
+
+            if (!req.file) {
+                return res.status(400).send({ message: "image is required" });
+            };
+
             try {
-                const result = await feedbackCollection.insertOne(feedBack);
-                res.send(result);
+                const uploadResult = await uploadTocloudinary(req.file.buffer);
+
+                const feedbackDoc = {
+                    name,
+                    email,
+                    feedback,
+                    photoURL: uploadResult.secure_url,
+                    createdAt: new Date(),
+                };
+
+                const result = await feedbackCollection.insertOne(feedbackDoc);
+                res.status(201).send({ message: "Thank you for your feedback!", id: result.insertedId });
             } catch (error) {
-                return res.status(500).send({ message: "unable to post feedback right now." });
+                res.status(500).send({ message: "unable to post feedback right now." });
             };
         });
 
@@ -474,12 +494,24 @@ async function run() {
             const query = { _id: new ObjectId(id) };
 
             try {
+                const feedbackDoc = await feedbackCollection.findOne(query);
+                if (!feedbackDoc) {
+                    return res.status(404).send({ message: "feedback not found!" });
+                };
+
+                const publicId = getPublicIdFromUrl(feedbackDoc.photoURL);
+                if (publicId) {
+                    try {
+                        await cloudinary.uploader.destroy(publicId);
+                    } catch (error) {
+                        console.error("feedback image cleanup failed:", error.message);
+                    };
+                };
+
                 const result = await feedbackCollection.deleteOne(query);
-                res.send(result);
+                res.send({ message: "feedback deleted", result });
             } catch (error) {
-                if (error) {
-                    return res.status(400).send({ message: "feedback not found!" })
-                }
+                res.status(500).send({ message: "unable to delete feedback" });
             };
         });
 
@@ -616,28 +648,28 @@ async function run() {
 
 
         //resume reletad api:
-        app.get("/resume", async(req, res)=>{
-            try{
-                const resume = await resumeCollection.findOne({key: "main"}, {projection: {_id: 0}});
+        app.get("/resume", async (req, res) => {
+            try {
+                const resume = await resumeCollection.findOne({ key: "main" }, { projection: { _id: 0 } });
                 res.send(resume || {});
-            }catch(error){
-                res.status(500).send({message: "unable to fetch resume"});
+            } catch (error) {
+                res.status(500).send({ message: "unable to fetch resume" });
             };
 
         });
 
         //upload resume or replace it:
-        app.post("/resume", verifyToken, otherLimiters, handleResumeUpload, async(req, res)=>{
-            if(!req.file){
-                return res.status(400).send({message: "pdf file is required"});
+        app.post("/resume", verifyToken, otherLimiters, handleResumeUpload, async (req, res) => {
+            if (!req.file) {
+                return res.status(400).send({ message: "pdf file is required" });
             };
 
-            try{
-                const existing = await resumeCollection.findOne({key: "main"});
+            try {
+                const existing = await resumeCollection.findOne({ key: "main" });
                 const uploaded = await uploadPdfToCloudinary(req.file.buffer);
 
                 await resumeCollection.updateOne(
-                    {key: "main"},
+                    { key: "main" },
                     {
                         $set: {
                             url: uploaded.secure_url,
@@ -646,40 +678,40 @@ async function run() {
                             uploadedAt: new Date(),
                         },
                     },
-                    {upsert: true}
+                    { upsert: true }
                 );
 
-                if(existing?.publicId){
-                    try{
-                        await cloudinary.uploader.destroy(existing.publicId, {resource_type: "raw"});
-                    }catch(error){
-                       return res.status(500).send({message: error.message});
+                if (existing?.publicId) {
+                    try {
+                        await cloudinary.uploader.destroy(existing.publicId, { resource_type: "raw" });
+                    } catch (error) {
+                        return res.status(500).send({ message: error.message });
                     };
                 };
 
-                res.status(201).send({message: "resume uploaded"})
-            }catch(error){
-                res.status(500).send({message: "unable to upload resume"});
+                res.status(201).send({ message: "resume uploaded" })
+            } catch (error) {
+                res.status(500).send({ message: "unable to upload resume" });
             };
         });
 
         //deleting the resume:
-        app.delete("/resume", verifyToken, otherLimiters, async(req, res)=>{
-            try{
-                const existing = await resumeCollection.findOneAndDelete({key: "main"});
-                if(!existing){
-                    return res.status(400).send({message: "no resume to delete"});
+        app.delete("/resume", verifyToken, otherLimiters, async (req, res) => {
+            try {
+                const existing = await resumeCollection.findOneAndDelete({ key: "main" });
+                if (!existing) {
+                    return res.status(400).send({ message: "no resume to delete" });
                 };
 
-                try{
-                    await cloudinary.uploader.destroy(existing.publicId, {resource_type: "raw"})
-                }catch(err){
-                    res.status(500).send({message: "Resume deletion failed"});
+                try {
+                    await cloudinary.uploader.destroy(existing.publicId, { resource_type: "raw" })
+                } catch (err) {
+                    res.status(500).send({ message: "Resume deletion failed" });
                 };
 
-                res.send({message: "Resume Deleted"});
-            }catch(error){
-                res.status(500).send({message: "unable to delete resume"});
+                res.send({ message: "Resume Deleted" });
+            } catch (error) {
+                res.status(500).send({ message: "unable to delete resume" });
             };
         });
 

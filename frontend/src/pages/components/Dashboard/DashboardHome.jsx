@@ -43,6 +43,18 @@ const DashboardHome = () => {
         }
     });
 
+    const { data: feedback = [], refetch: refetchFeedback } = useQuery({
+        queryKey: ['feedback'],
+        queryFn: async () => {
+            try {
+                const res = await axiosSecure.get("/feedback");
+                return res.data;
+            } catch (error) {
+                if (error.response?.status == 400) return [];
+            };
+        }
+    });
+
     // whenever a different certification is selected, refill the form with its data
     useEffect(() => {
         if (selectedCert) {
@@ -218,6 +230,37 @@ const DashboardHome = () => {
         });
     };
 
+    // ---------- feedback delete handler ----------
+
+    const handleDeleteFeedback = (feedbackItem) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This feedback and its image will be permanently deleted.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axiosSecure.delete(`/feedback/${feedbackItem._id}`)
+                    .then((res) => {
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: res.data.message || "Feedback deleted",
+                            icon: "success",
+                        });
+                        refetchFeedback();
+                    })
+                    .catch((error) => {
+                        Swal.fire({
+                            title: "Error",
+                            text: error.response?.data?.message || "Unable to delete feedback.",
+                            icon: "error",
+                        });
+                    });
+            }
+        });
+    };
+
     if (loading) return <p className="font-bold text-xl text-[#00E5A0] text-center">Loading.........</p>
 
 
@@ -321,6 +364,39 @@ const DashboardHome = () => {
                             ))
                         }
                     </div>
+                </div>
+            </div>
+
+            {/* feedback posts and it's functionality */}
+
+            <div className="md:max-w-7xl mx-auto m-2">
+                <div className="m-3 p-3">
+                    <h1 className="font-bold text-xl text-[#00e5a0] p-2">Feedback Posts:</h1>
+                </div>
+                <div className="grid grid-cols-4 gap-4 mt-5">
+                    {
+                        feedback.map((f) => (
+                            <div key={f._id} className="w-100 rounded-md border border-[#00e5a0] relative flex items-start flex-col gap-2 p-3">
+                                <button
+                                    type="button"
+                                    onClick={() => handleDeleteFeedback(f)}
+                                    className="absolute top-2 right-2 text-xs font-bold text-red-500 border border-red-500 rounded-md px-2 py-1 cursor-pointer hover:bg-red-500 hover:text-white transition-all"
+                                >
+                                    Delete
+                                </button>
+                                <div className="rounded-full w-30 h-30 border border-[#00ea50]">
+                                    <img src={f.photoURL} alt={f.name} className="w-full h-full object-cover rounded-full" />
+                                </div>
+                                <h1 className="font-bold text-[#00ea50]">{f.name}</h1>
+                                <h2 className="font-bold text-[#00ea50] text-sm">{f.email}</h2>
+                                <div>
+                                    <h2 className="italic capitalize text-[20px] text-[#00ea50]">
+                                        "{f.feedback}"
+                                    </h2>
+                                </div>
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
 

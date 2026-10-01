@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react';
 import useAxios from '../../axios/useAxios';
 import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form"
-import axios from 'axios';
 
 
 
@@ -39,37 +38,34 @@ const Feedback = () => {
 
     //handle form submission:
     const handleFormSubmit = (data) => {
-        // console.log(data);
-        const profileImg = data.image[0];
         setSubmitting(true);
 
-        //uploading image to imgbb:
+        const imageFile = data.image[0]; // capture immediately, before anything async happens
+
         const formData = new FormData();
-        formData.append('image', profileImg);
+        formData.append('name', data.name);
+        formData.append('email', data.email);
+        formData.append('feedback', data.feedback);
+        formData.append('image', imageFile);
 
-        const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host}`
-        axios.post(image_API_URL, formData).then(res => {
-            const photoURL = res.data.data.url;
+        axiosinstance.post('/feedback', formData).then(res => {
+            toast.success(res.data.message || "Feedback submitted");
+            reset();
+            setFeedForm(false);
 
-            //feedback payload:
-            const feedbackInfo = {
+            // reflect the new feedback immediately without a full refetch
+            setFeedback(prev => [...prev, {
+                _id: res.data.id,
                 name: data.name,
                 email: data.email,
                 feedback: data.feedback,
-                photoURL: photoURL,
-            };
-
-            axiosinstance.post('/feedback', feedbackInfo).then(res => {
-                toast.success(res.data.message);
-                reset();
-                setFeedForm(false);
-                setSubmitting(false);
-            }).catch((err) => {
-                toast.error(err.data.message);
-            });
-        }).catch(() => {
-            toast.error("Unable to upload your photo.");
-        })
+                photoURL: imageFile ? URL.createObjectURL(imageFile) : "",
+            }]);
+        }).catch((err) => {
+            toast.error(err?.response?.data?.message || "Unable to submit feedback");
+        }).finally(() => {
+            setSubmitting(false);
+        });
     }
 
     if (loading) return <p className='text-center italic text-[#005A00] font-bold'>Loading.....</p>
@@ -102,13 +98,15 @@ const Feedback = () => {
                         feedback.length === 0 ? <p className='font-bold text-xl text-center text-[#00E5A0]'>No Feedbacks yet!</p>
                             :
                             feedback.map((f) => (
-                                <SwiperSlide key={f._id} className="w-150! h-80! rounded-xl border-2 border-[#00E5A0] shadow-[inset_0_0_40px_rgba(0,229,160,0.15)] bg-white/4">
-                                    <div className='p-8 flex items-center w-full justify-center flex-col gap-2'>
+                                <SwiperSlide key={f._id} className="w-110! h-80! rounded-xl border-2 border-[#00E5A0] shadow-[inset_0_0_40px_rgba(0,229,160,0.15)] bg-white/4">
+                                    <div className='p-8 flex items-start w-full justify-center flex-col gap-2'>
                                         <img src={f.photoURL} alt={f.name} className='rounded-full w-20 h-20 border-3 border-[#00E5A0]' />
                                         <div>
-                                            <h1 className='font-bold text-[20px] text-[#00E5A0] pt-5'>{f.name}</h1>
-                                            <p className='text-sm'>{f.email}</p>
-                                            <p className='text-wrap pt-2 text-[18px]'>{f.feedback}</p>
+                                            <h1 className='font-bold text-[20px] text-[#00E5A0] pt-5 capitalize'>{f.name}</h1>
+                                            <p className='text-sm text-[#00ea50]'>{f.email}</p>
+                                            <p className='text-wrap pt-2 text-[18px] text-[#00e5a0] capitalize italic font-bold'>
+                                                "{f.feedback}"
+                                            </p>
                                         </div>
                                     </div>
                                 </SwiperSlide>
@@ -142,7 +140,6 @@ const Feedback = () => {
             />
 
             {/* sliding panel - always mounted, transform-driven */}
-            {/* sliding panel - always mounted, transform-driven */}
             <div
                 className={`border-0 border-l border-[#00E5A0] fixed right-0 top-0 h-screen w-full sm:w-100 md:w-110 z-100
         bg-black shadow-[0_0_40px_rgba(0,229,160,0.18)]
@@ -161,7 +158,7 @@ const Feedback = () => {
                         <input type="text" className="input bg-white/4 border-0 border-b-2 border-[#00E5A0] w-full" placeholder="Your Name" {...register("name", { required: true })} />
                         {errors.name?.type === "required" && <p className='text-red-500 p-2 '>Name field is required.</p>}
 
-                        <input type="file" className="file-input w-full border-0 border-b border-[#00E5A0] mt-2" {...register("image", { required: true, validate: files => files[0]?.size <= 2 * 1024 * 1024 || "Image must be under 2MB" })} />
+                        <input type="file" accept="image/*" className="file-input w-full border-0 border-b border-[#00E5A0] mt-2" {...register("image", { required: true, validate: files => files[0]?.size <= 2 * 1024 * 1024 || "Image must be under 2MB" })} />
                         <label className="label">Max size 2MB</label>
                         {errors.image?.type === "required" && <p className='text-red-500 p-2'>You must provide an image</p>}
                         {errors.image?.type === 'validate' && <p className='text-red-500 p-2'>Image must be under 2MB</p>}
