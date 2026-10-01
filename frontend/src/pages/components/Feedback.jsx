@@ -92,19 +92,19 @@ const Feedback = () => {
                     }}
                     pagination={true}
                     modules={[EffectCoverflow, Pagination, Autoplay]}
-                    className="mySwiper md:max-w-5xl mx-auto"
+                    className="mySwiper w-full md:max-w-5xl mx-auto px-4"
                 >
                     {
                         feedback.length === 0 ? <p className='font-bold text-xl text-center text-[#00E5A0]'>No Feedbacks yet!</p>
                             :
                             feedback.map((f) => (
-                                <SwiperSlide key={f._id} className="w-110! h-80! rounded-xl border-2 border-[#00E5A0] shadow-[inset_0_0_40px_rgba(0,229,160,0.15)] bg-white/4">
-                                    <div className='p-8 flex items-start w-full justify-center flex-col gap-2'>
-                                        <img src={f.photoURL} alt={f.name} className='rounded-full w-20 h-20 border-3 border-[#00E5A0]' />
+                                <SwiperSlide key={f._id} className="w-70! h-65! sm:w-96! sm:h-80! md:w-110! md:h-80! rounded-xl border-2 border-[#00E5A0] shadow-[inset_0_0_40px_rgba(0,229,160,0.15)] bg-white/4">
+                                    <div className='p-4 sm:p-6 md:p-8 flex items-start w-full h-full justify-center flex-col gap-2'>
+                                        <img src={f.photoURL} alt={f.name} className='rounded-full w-14 h-14 sm:w-20 sm:h-20 border-3 border-[#00E5A0]' />
                                         <div>
-                                            <h1 className='font-bold text-[20px] text-[#00E5A0] pt-5 capitalize'>{f.name}</h1>
-                                            <p className='text-sm text-[#00ea50]'>{f.email}</p>
-                                            <p className='text-wrap pt-2 text-[18px] text-[#00e5a0] capitalize italic font-bold'>
+                                            <h1 className='font-bold text-base sm:text-[20px] text-[#00E5A0] pt-3 sm:pt-5 capitalize'>{f.name}</h1>
+                                            <p className='text-xs sm:text-sm text-[#00ea50]'>{f.email}</p>
+                                            <p className='text-wrap pt-2 text-sm sm:text-[18px] text-[#00e5a0] capitalize italic font-bold'>
                                                 "{f.feedback}"
                                             </p>
                                         </div>
