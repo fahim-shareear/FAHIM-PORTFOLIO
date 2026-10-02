@@ -9,7 +9,7 @@ import useScrollHash from "../authcontext/hooks/useScrollHash";
 import SideSocial from "./components/sidebar/SideSocial";
 import CertificationDrawer from "./components/CertificationDrawer";
 
-const PARTICLE_COUNT = 400;
+const PARTICLE_COUNT = 100;
 
 const Home = () => {
     const containerRef = useRef(null);

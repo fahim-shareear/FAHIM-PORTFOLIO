@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdCloseCircle } from "react-icons/io";
+import { scroller } from "react-scroll";
 import "../all-css/nav.css";
 import useCertification from "../authcontext/hooks/useCertification";
 import { useLocation, useNavigate } from "react-router";
@@ -35,7 +36,7 @@ const Navbar = () => {
         if(location.pathname !== "/"){
             navigate(`/${item.to}`)
         }else{
-            document.getElementById(id)?.scrollIntoView({bahaviour: "smooth"});
+            scroller.scrollTo(id, { smooth: true, duration: 500 });
         }
     };
 
